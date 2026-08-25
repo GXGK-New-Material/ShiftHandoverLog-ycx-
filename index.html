@@ -656,6 +656,29 @@
     </div>
 </div>
 
+<!-- Delete Password Modal -->
+<div class="modal-overlay" id="deleteAuthModal">
+    <div class="modal" style="max-width:400px;">
+        <div class="modal-header">
+            <h3>确认删除</h3>
+            <button class="modal-close" onclick="closeDeleteAuthModal()">&times;</button>
+        </div>
+        <div class="modal-body">
+            <p style="font-size:14px; color:var(--text2); margin-bottom:12px;">删除此记录需要输入删除密码</p>
+            <div class="form-group">
+                <label>删除密码</label>
+                <input type="password" id="deletePassword" placeholder="请输入删除密码" autocomplete="off"
+                       onkeydown="if(event.key==='Enter')confirmDeleteWithPassword()">
+            </div>
+            <p id="deleteAuthError" style="display:none; font-size:13px; color:var(--red); margin-top:8px;">密码错误，请重试</p>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-outline" onclick="closeDeleteAuthModal()">取消</button>
+            <button class="btn btn-danger" onclick="confirmDeleteWithPassword()">确认删除</button>
+        </div>
+    </div>
+</div>
+
 <!-- Toast -->
 <!-- 集成冶炼数据弹窗 -->
 <div class="modal-overlay" id="smeltingModal">
@@ -1456,7 +1479,33 @@ function saveEditedRecord() {
 }
 
 function deleteRecord(id) {
-    if (!confirm('确定要删除这条记录吗？')) return;
+    pendingDeleteId = id;
+    document.getElementById('deletePassword').value = '';
+    document.getElementById('deleteAuthError').style.display = 'none';
+    document.getElementById('deleteAuthModal').classList.add('show');
+    setTimeout(() => document.getElementById('deletePassword').focus(), 50);
+}
+
+const DELETE_PASSWORD = 'gk123456';
+let pendingDeleteId = null;
+
+function closeDeleteAuthModal() {
+    document.getElementById('deleteAuthModal').classList.remove('show');
+    pendingDeleteId = null;
+    document.getElementById('deletePassword').value = '';
+    document.getElementById('deleteAuthError').style.display = 'none';
+}
+
+function confirmDeleteWithPassword() {
+    if (document.getElementById('deletePassword').value !== DELETE_PASSWORD) {
+        document.getElementById('deleteAuthError').style.display = 'block';
+        document.getElementById('deletePassword').select();
+        showToast('密码错误', 'error');
+        return;
+    }
+    const id = pendingDeleteId;
+    closeDeleteAuthModal();
+    if (!id) return;
     records = records.filter(r => r.id !== id);
     saveRecords();
     renderRecords();

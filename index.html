@@ -656,7 +656,7 @@
     </div>
 </div>
 
-<!-- ========== [新增] 删除权限：删除记录前需输入密码（密码：gk123456） ========== -->
+<!-- Delete Password Modal -->
 <div class="modal-overlay" id="deleteAuthModal">
     <div class="modal" style="max-width:400px;">
         <div class="modal-header">
@@ -1478,7 +1478,6 @@ function saveEditedRecord() {
     showToast('修改已保存', 'success');
 }
 
-// ========== [新增] 删除权限：校验删除密码后才允许删除记录 ==========
 function deleteRecord(id) {
     pendingDeleteId = id;
     document.getElementById('deletePassword').value = '';
@@ -1487,8 +1486,8 @@ function deleteRecord(id) {
     setTimeout(() => document.getElementById('deletePassword').focus(), 50);
 }
 
-const DELETE_PASSWORD = 'gk123456'; // 删除密码
-let pendingDeleteId = null; // 待删除记录 id
+const DELETE_PASSWORD = 'gk123456';
+let pendingDeleteId = null;
 
 function closeDeleteAuthModal() {
     document.getElementById('deleteAuthModal').classList.remove('show');

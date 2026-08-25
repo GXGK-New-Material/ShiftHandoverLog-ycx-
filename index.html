@@ -1,7 +1,5 @@
 
 
-
-
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
@@ -1011,6 +1009,7 @@ function renderSmeltingCard(cardData) {
 
 // ==================== STATE MANAGEMENT ====================
 const STORAGE_KEY = 'shift_log_records';
+const DRAFT_KEY = 'shift_log_draft';
 let records = [];
 let editingId = null;
 
@@ -1025,6 +1024,59 @@ function saveRecords() {
 }
 function genId() {
     return Date.now().toString(36) + Math.random().toString(36).substr(2, 5);
+}
+
+// ==================== FORM DRAFT (auto-save / restore) ====================
+const SYSTEM_SELECT_IDS = ['electrodePos', 'tempSystem', 'electrodePress', 'hydraulic', 'waterCool', 'mechanical'];
+
+function saveDraft() {
+    const draft = {};
+    document.querySelectorAll('#page-entry input, #page-entry select, #page-entry textarea').forEach(el => {
+        if (!el.id) return;
+        draft[el.id] = el.value;
+    });
+    localStorage.setItem(DRAFT_KEY, JSON.stringify(draft));
+}
+
+function clearDraft() {
+    localStorage.removeItem(DRAFT_KEY);
+}
+
+function syncSystemCustomVisibility() {
+    SYSTEM_SELECT_IDS.forEach(id => {
+        const sel = document.getElementById(id);
+        const custom = document.getElementById(id + 'Custom');
+        if (!sel || !custom) return;
+        custom.style.display = sel.value === '__custom__' ? 'block' : 'none';
+    });
+}
+
+function loadDraft() {
+    try {
+        const raw = localStorage.getItem(DRAFT_KEY);
+        if (!raw) return false;
+        const draft = JSON.parse(raw);
+        if (!draft || typeof draft !== 'object') return false;
+
+        let hasAny = false;
+        Object.keys(draft).forEach(id => {
+            const el = document.getElementById(id);
+            if (!el) return;
+            const val = draft[id];
+            if (val !== undefined && val !== null) {
+                el.value = val;
+                if (String(val).trim() !== '') hasAny = true;
+            }
+        });
+        if (!hasAny) return false;
+
+        syncSystemCustomVisibility();
+        updateHeaderFurnace();
+        updatePreview();
+        return true;
+    } catch(e) {
+        return false;
+    }
 }
 
 // ==================== TAB NAVIGATION ====================
@@ -1221,6 +1273,7 @@ function saveAndNew() {
         d.setDate(d.getDate() + 1);
         dateEl.value = d.toISOString().split('T')[0];
     }
+    saveDraft();
 }
 
 function clearForm() {
@@ -1231,6 +1284,7 @@ function clearForm() {
     });
     document.querySelectorAll('#page-entry input[type="text"][id$="Custom"]').forEach(el => el.style.display = 'none');
     editingId = null;
+    clearDraft();
     updatePreview();
 }
 
@@ -1241,6 +1295,7 @@ function loadPrevRecord() {
     // For simplicity, just copy furnace number and set today's date
     document.getElementById('furnaceNumber').value = last.furnaceNumber;
     updateHeaderFurnace();
+    saveDraft();
     showToast('已加载炉号: ' + last.furnaceNumber + '，请手动填写其他字段', 'success');
 }
 
@@ -1278,6 +1333,7 @@ function fillDemo() {
     document.getElementById('materialChange').value = '无';
     document.getElementById('abnormal').value = '无';
     updatePreview();
+    saveDraft();
     showToast('已填入示例数据', 'success');
 }
 
@@ -1746,6 +1802,7 @@ function applySmeltingToForm(shiftName) {
     }
 
     updatePreview();
+    saveDraft();
     showToast('已填充冶炼数据到表单', 'success');
     closeSmeltingModal();
     switchTab('entry');
@@ -1755,26 +1812,33 @@ function applySmeltingToForm(shiftName) {
 function init() {
     loadRecords();
 
-    // Set default date to today
-    const today = new Date().toISOString().split('T')[0];
-    document.getElementById('recordDate').value = today;
-
     // Setup system field toggles
-    ['electrodePos', 'tempSystem', 'electrodePress', 'hydraulic', 'waterCool', 'mechanical'].forEach(id => {
+    SYSTEM_SELECT_IDS.forEach(id => {
         setupSystemToggle(id, id + 'Custom');
     });
 
-    // Auto-update preview on any form change
-    document.getElementById('page-entry').addEventListener('input', updatePreview);
-    document.getElementById('page-entry').addEventListener('change', updatePreview);
+    // Auto-update preview + persist draft on any form change
+    const onFormChange = () => {
+        updatePreview();
+        saveDraft();
+    };
+    document.getElementById('page-entry').addEventListener('input', onFormChange);
+    document.getElementById('page-entry').addEventListener('change', onFormChange);
 
     // Scroll to top button
     window.addEventListener('scroll', () => {
         document.getElementById('scrollTop').classList.toggle('show', window.scrollY > 300);
     });
 
+    // Restore unfinished form draft, or default date to today
+    if (loadDraft()) {
+        showToast('已恢复未完成的填写内容', 'success');
+    } else {
+        document.getElementById('recordDate').value = new Date().toISOString().split('T')[0];
+        updatePreview();
+    }
+
     renderStats();
-    updatePreview();
 }
 
 init();

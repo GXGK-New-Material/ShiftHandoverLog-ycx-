@@ -302,7 +302,7 @@
                 <!-- [新增] 值班员手输框 -->
                 <div class="form-group">
                     <label>值班员</label>
-                    <input type="text" id="dutyOfficer" placeholder="如: 张治顺、医斌">
+                    <input type="text" id="dutyOfficer" placeholder="如: 张治顺、陆斌">
                 </div>
             </div>
         </div>
@@ -340,11 +340,11 @@
             <div class="form-row cols-2">
                 <div class="form-group">
                     <label>南面铁口深度 (mm)</label>
-                    <input type="number" id="southDepth" placeholder="如: 1.0~1.2" min="0" max="1400">
+                    <input type="number" id="southDepth" placeholder="如: 1200" min="0" max="1400">
                 </div>
                 <div class="form-group">
                     <label>北面铁口深度 (mm)</label>
-                    <input type="number" id="northDepth" placeholder="如: 0.8~1.0" min="0" max="1400">
+                    <input type="number" id="northDepth" placeholder="如: 1400" min="0" max="1400">
                 </div>
             </div>
         </div>
@@ -357,7 +357,7 @@
             <div class="sub-title">南面</div>
             <div class="form-row cols-3">
                 <div class="form-group">
-                    <label>渣铁流动性</label>
+                    <label>炉温（流动性）</label>
                     <select id="southFluidity"><option value="">-</option><option>好</option><option>一般</option><option>不好</option></select>
                 </div>
                 <div class="form-group">
@@ -392,7 +392,7 @@
             <div class="sub-title">北面</div>
             <div class="form-row cols-3">
                 <div class="form-group">
-                    <label>渣铁流动性</label>
+                    <label>炉温（流动性）</label>
                     <select id="northFluidity"><option value="">-</option><option>好</option><option>一般</option><option>不好</option></select>
                 </div>
                 <div class="form-group">
@@ -906,7 +906,7 @@ function loadPrevRecord() {
 function fillDemo() {
     // [新增] 示例数据填入炉号和值班员
     document.getElementById('furnaceNumber').value = '101';
-    document.getElementById('dutyOfficer').value = '张治顺、医斌';
+    document.getElementById('dutyOfficer').value = '张治顺、陆斌';
     document.getElementById('ironCount').value = '4';
     document.getElementById('southCount').value = '2';
     document.getElementById('northCount').value = '2';

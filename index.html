@@ -1,4 +1,7 @@
 
+
+
+
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
@@ -611,13 +614,6 @@
         </div>
     </div>
 
-    <div class="card">
-        <div class="card-header"><span class="section-icon">🗑️</span><h3>数据清理</h3></div>
-        <div class="card-body">
-            <p style="font-size:14px; color:var(--text2); margin-bottom:12px;">清除所有本地存储的记录数据。此操作不可恢复，建议先导出备份。</p>
-            <button class="btn btn-danger" onclick="clearAllData()">清空所有数据</button>
-        </div>
-    </div>
 </div>
 
 </div><!-- end main -->
@@ -1015,7 +1011,6 @@ function renderSmeltingCard(cardData) {
 
 // ==================== STATE MANAGEMENT ====================
 const STORAGE_KEY = 'shift_log_records';
-const DRAFT_KEY = 'shift_log_draft';
 let records = [];
 let editingId = null;
 
@@ -1030,59 +1025,6 @@ function saveRecords() {
 }
 function genId() {
     return Date.now().toString(36) + Math.random().toString(36).substr(2, 5);
-}
-
-// ==================== FORM DRAFT (auto-save / restore) ====================
-const SYSTEM_SELECT_IDS = ['electrodePos', 'tempSystem', 'electrodePress', 'hydraulic', 'waterCool', 'mechanical'];
-
-function saveDraft() {
-    const draft = {};
-    document.querySelectorAll('#page-entry input, #page-entry select, #page-entry textarea').forEach(el => {
-        if (!el.id) return;
-        draft[el.id] = el.value;
-    });
-    localStorage.setItem(DRAFT_KEY, JSON.stringify(draft));
-}
-
-function clearDraft() {
-    localStorage.removeItem(DRAFT_KEY);
-}
-
-function syncSystemCustomVisibility() {
-    SYSTEM_SELECT_IDS.forEach(id => {
-        const sel = document.getElementById(id);
-        const custom = document.getElementById(id + 'Custom');
-        if (!sel || !custom) return;
-        custom.style.display = sel.value === '__custom__' ? 'block' : 'none';
-    });
-}
-
-function loadDraft() {
-    try {
-        const raw = localStorage.getItem(DRAFT_KEY);
-        if (!raw) return false;
-        const draft = JSON.parse(raw);
-        if (!draft || typeof draft !== 'object') return false;
-
-        let hasAny = false;
-        Object.keys(draft).forEach(id => {
-            const el = document.getElementById(id);
-            if (!el) return;
-            const val = draft[id];
-            if (val !== undefined && val !== null) {
-                el.value = val;
-                if (String(val).trim() !== '') hasAny = true;
-            }
-        });
-        if (!hasAny) return false;
-
-        syncSystemCustomVisibility();
-        updateHeaderFurnace();
-        updatePreview();
-        return true;
-    } catch(e) {
-        return false;
-    }
 }
 
 // ==================== TAB NAVIGATION ====================
@@ -1279,7 +1221,6 @@ function saveAndNew() {
         d.setDate(d.getDate() + 1);
         dateEl.value = d.toISOString().split('T')[0];
     }
-    saveDraft();
 }
 
 function clearForm() {
@@ -1290,7 +1231,6 @@ function clearForm() {
     });
     document.querySelectorAll('#page-entry input[type="text"][id$="Custom"]').forEach(el => el.style.display = 'none');
     editingId = null;
-    clearDraft();
     updatePreview();
 }
 
@@ -1301,7 +1241,6 @@ function loadPrevRecord() {
     // For simplicity, just copy furnace number and set today's date
     document.getElementById('furnaceNumber').value = last.furnaceNumber;
     updateHeaderFurnace();
-    saveDraft();
     showToast('已加载炉号: ' + last.furnaceNumber + '，请手动填写其他字段', 'success');
 }
 
@@ -1339,7 +1278,6 @@ function fillDemo() {
     document.getElementById('materialChange').value = '无';
     document.getElementById('abnormal').value = '无';
     updatePreview();
-    saveDraft();
     showToast('已填入示例数据', 'success');
 }
 
@@ -1689,14 +1627,7 @@ function importJSON(event) {
     event.target.value = '';
 }
 
-function clearAllData() {
-    if (!confirm('确定要清空所有数据吗？此操作不可恢复！')) return;
-    if (!confirm('再次确认：真的要清空所有记录数据吗？')) return;
-    records = [];
-    saveRecords();
-    renderStats();
-    showToast('所有数据已清空', 'success');
-}
+
 
 // ==================== UTILITIES ====================
 function formatDateDisplay(dateStr) {
@@ -1815,7 +1746,6 @@ function applySmeltingToForm(shiftName) {
     }
 
     updatePreview();
-    saveDraft();
     showToast('已填充冶炼数据到表单', 'success');
     closeSmeltingModal();
     switchTab('entry');
@@ -1825,33 +1755,26 @@ function applySmeltingToForm(shiftName) {
 function init() {
     loadRecords();
 
+    // Set default date to today
+    const today = new Date().toISOString().split('T')[0];
+    document.getElementById('recordDate').value = today;
+
     // Setup system field toggles
-    SYSTEM_SELECT_IDS.forEach(id => {
+    ['electrodePos', 'tempSystem', 'electrodePress', 'hydraulic', 'waterCool', 'mechanical'].forEach(id => {
         setupSystemToggle(id, id + 'Custom');
     });
 
-    // Auto-update preview + persist draft on any form change
-    const onFormChange = () => {
-        updatePreview();
-        saveDraft();
-    };
-    document.getElementById('page-entry').addEventListener('input', onFormChange);
-    document.getElementById('page-entry').addEventListener('change', onFormChange);
+    // Auto-update preview on any form change
+    document.getElementById('page-entry').addEventListener('input', updatePreview);
+    document.getElementById('page-entry').addEventListener('change', updatePreview);
 
     // Scroll to top button
     window.addEventListener('scroll', () => {
         document.getElementById('scrollTop').classList.toggle('show', window.scrollY > 300);
     });
 
-    // Restore unfinished form draft, or default date to today
-    if (loadDraft()) {
-        showToast('已恢复未完成的填写内容', 'success');
-    } else {
-        document.getElementById('recordDate').value = new Date().toISOString().split('T')[0];
-        updatePreview();
-    }
-
     renderStats();
+    updatePreview();
 }
 
 init();

@@ -736,7 +736,7 @@ function buildText() {
 
     // 南面情况
     const sFluid = getVal('southFluidity');
-    if (sFluid) parts.push(`南面炉温（流动性）${sFluid}`);
+    if (sFluid) parts.push(`南面渣铁流动性${sFluid}`);
     const sFlow = getVal('southFlow');
     if (sFlow) parts.push(`南面流量${sFlow}`);
     const sBlock = getVal('southBlock');
@@ -752,7 +752,7 @@ function buildText() {
 
     // 北面情况
     const nFluid = getVal('northFluidity');
-    if (nFluid) parts.push(`北面炉温（流动性）${nFluid}`);
+    if (nFluid) parts.push(`北面渣铁流动性${nFluid}`);
     const nFlow = getVal('northFlow');
     if (nFlow) parts.push(`北面流量${nFlow}`);
     const nBlock = getVal('northBlock');
@@ -848,6 +848,7 @@ function saveRecord() {
         furnaceNumber: furnace,
         date: date,
         shift: shift,
+        dutyOfficer: getVal('dutyOfficer'),  // [新增] 保存值班员字段
         content: content,
         createdAt: editingId ? (records.find(r => r.id === editingId)?.createdAt || new Date().toISOString()) : new Date().toISOString(),
         updatedAt: new Date().toISOString()

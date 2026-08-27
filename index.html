@@ -1,13 +1,15 @@
 
 
 
-
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>交接班记录管理系统</title>
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>交接班记录管理系统 v1.6</title>
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
     <style>
         :root {
@@ -199,6 +201,43 @@
             background: var(--card); border-radius: 12px; box-shadow: var(--shadow-lg);
             max-width: 700px; width: 100%; max-height: 80vh; overflow-y: auto;
         }
+        .modal.smelting-modal {
+            max-width: 720px;
+            max-height: 85vh;
+        }
+        .smelting-shift-card {
+            margin-bottom: 20px; padding: 14px; background: #f8fafc;
+            border-radius: 8px; border: 1px solid var(--border);
+        }
+        .smelting-shift-card .shift-title {
+            font-weight: 700; font-size: 15px; color: var(--primary); margin-bottom: 8px;
+        }
+        .smelting-shift-card .shift-summary {
+            font-size: 13px; color: var(--text2); line-height: 1.8; margin-bottom: 12px;
+        }
+        .smelting-section { margin-top: 12px; }
+        .smelting-section h4 {
+            font-size: 13px; font-weight: 600; color: var(--text);
+            margin-bottom: 6px; padding-left: 8px; border-left: 3px solid var(--primary);
+        }
+        .smelting-section.empty h4 { color: var(--text3); border-left-color: var(--border); }
+        .smelting-kv-grid {
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 6px 12px; font-size: 12px;
+        }
+        .smelting-kv { background: white; padding: 6px 8px; border-radius: 4px; border: 1px solid var(--border); }
+        .smelting-kv .k { color: var(--text3); display: block; font-size: 11px; margin-bottom: 2px; }
+        .smelting-kv .v { color: var(--text); word-break: break-all; }
+        .smelting-table-wrap { overflow-x: auto; margin-top: 4px; }
+        .smelting-table {
+            width: 100%; border-collapse: collapse; font-size: 12px; background: white;
+        }
+        .smelting-table th, .smelting-table td {
+            padding: 6px 8px; border: 1px solid var(--border); text-align: left;
+            white-space: nowrap;
+        }
+        .smelting-table th { background: #f1f5f9; font-weight: 600; color: var(--text2); }
+        .smelting-empty-tip { font-size: 12px; color: var(--text3); padding: 4px 8px; }
         .modal-header {
             padding: 16px 20px; border-bottom: 1px solid var(--border);
             display: flex; align-items: center; justify-content: space-between;
@@ -254,7 +293,7 @@
 
 <!-- Header -->
 <div class="header">
-    <h1>🏭 交接班记录管理系统<span>v1.0</span></h1>
+    <h1>🏭 交接班记录管理系统<span>v1.6</span></h1>
     <div class="header-actions">
         <button class="btn btn-sm" style="background:rgba(255,255,255,0.2);color:white;border:none;" onclick="openSmeltingModal()">🔗 集成冶炼数据</button>
         <div class="furnace-badge" id="headerFurnace">炉号: 101</div>
@@ -283,7 +322,7 @@
     <div class="card">
         <div class="card-header"><span class="section-icon">📌</span><h3>基本信息</h3></div>
         <div class="card-body">
-            <!-- ====== [新增+修改] 基本信息栏从3列改为4列，新增"值班员"输入框 ====== -->
+            <!-- ====== [新增+修改] 基本信息栏从3列改为4列，新增"值班长"输入框 ====== -->
             <div class="form-row cols-5">
                 <div class="form-group">
                     <label>炉号</label>
@@ -313,9 +352,9 @@
                         <option value="third">丙班</option>
                     </select>
                 </div>
-                <!-- [新增] 值班员手输框 -->
+                <!-- [新增] 值班长手输框 -->
                 <div class="form-group">
-                    <label>值班员</label>
+                    <label>值班长</label>
                     <input type="text" id="dutyOfficer" placeholder="如: 张治顺、陆斌">
                 </div>
             </div>
@@ -586,9 +625,9 @@
         <select id="filterTeam" onchange="renderRecords()">
             <option value="">全部</option><option value="first">甲班</option><option value="second">乙班</option><option value="third">丙班</option>
         </select>
-        <!-- [新增] 值班员筛选输入框 -->
-        <label>值班员:</label>
-        <input type="text" id="filterDuty" placeholder="值班员" oninput="renderRecords()" style="width:90px; flex:0 0 auto;">
+        <!-- [新增] 值班长筛选输入框 -->
+        <label>值班长:</label>
+        <input type="text" id="filterDuty" placeholder="值班长" oninput="renderRecords()" style="width:90px; flex:0 0 auto;">
         <input type="text" id="filterSearch" placeholder="搜索关键词..." oninput="renderRecords()" style="flex:1; min-width:120px;">
         <button class="btn btn-outline btn-sm" onclick="clearFilters()">清除筛选</button>
     </div>
@@ -640,7 +679,7 @@
             <button class="modal-close" onclick="closeEditModal()">&times;</button>
         </div>
         <div class="modal-body">
-            <!-- ====== [修改] 编辑弹窗从3列改为4列，新增值班员编辑 ====== -->
+            <!-- ====== [修改] 编辑弹窗从3列改为4列，新增值班长编辑 ====== -->
             <div class="form-row cols-5">
                 <div class="form-group">
                     <label>炉号</label>
@@ -662,10 +701,10 @@
                         <option value="third">丙班</option>
                     </select>
                 </div>
-                <!-- [新增] 编辑弹窗中的值班员输入框 -->
+                <!-- [新增] 编辑弹窗中的值班长输入框 -->
                 <div class="form-group">
-                    <label>值班员</label>
-                    <input type="text" id="editDuty" placeholder="值班员姓名">
+                    <label>值班长</label>
+                    <input type="text" id="editDuty" placeholder="值班长姓名">
                 </div>
             </div>
             <div class="form-group" style="margin-top:12px;">
@@ -706,7 +745,7 @@
 <!-- Toast -->
 <!-- 集成冶炼数据弹窗 -->
 <div class="modal-overlay" id="smeltingModal">
-    <div class="modal">
+    <div class="modal smelting-modal">
         <div class="modal-header">
             <h3>🔗 集成冶炼数据</h3>
             <button class="modal-close" onclick="closeSmeltingModal()">&times;</button>
@@ -750,7 +789,7 @@
 <button class="scroll-top" id="scrollTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
 
 <script>
-// ==================== 冶炼卡数据获取与按班次rid分组模块 ====================
+// ==================== 冶炼卡 API（保留原始 13 段数据，不做字段改写） ====================
 const SMELTING_API_URL = 'http://10.76.0.250:8091/api/smelting_card_unified';
 
 const SEGMENT = {
@@ -768,6 +807,10 @@ const SEGMENT = {
   COKE_NAME: 11,
   COKE_MOISTURE: 12
 };
+
+let smeltingRawResponse = null;
+let smeltingShiftIndex = null;
+let smeltingQueryContext = null;
 
 async function fetchSmeltingCard(furnaceNo, date, shift = null) {
   const params = new URLSearchParams({
@@ -793,263 +836,541 @@ async function fetchSmeltingCard(furnaceNo, date, shift = null) {
     throw new Error('API返回数据格式异常：data应为13个段的数组');
   }
 
-  return groupByRid(data);
+  smeltingQueryContext = { furnaceNo, date: normalizeApiDate(date), shift: shift || '' };
+  smeltingRawResponse = result;
+  smeltingShiftIndex = buildShiftIndexFromRaw(data, smeltingQueryContext.date, smeltingQueryContext.shift);
+  return { raw: result, index: smeltingShiftIndex };
 }
 
-function groupByRid(data) {
-  const mainSegment = data[SEGMENT.MAIN];
-  const ridMap = {};
-  mainSegment.forEach(row => {
-    const rid = row.rid;
-    ridMap[rid] = {
-      rid: rid,
-      班次: row.shift,
-      班组: row.team,
-      炉长: row.leader,
-      操作工: row.operator,
-      炉长2: row.leader2,
-      操作工2: row.operator2,
-      除尘灰锰: row.dust_mn_pct,
-      日期: row.date,
-      炉号: row.furnace_no,
-      卡号: row.id
-    };
-  });
+function filterByRid(segment, rid) {
+  return (segment || []).filter(row => row.rid == rid);
+}
 
-  const result = {};
-  Object.keys(ridMap).forEach(rid => {
-    const shiftName = ridMap[rid].班次;
-    result[shiftName] = {
-      rid: rid,
-      ...ridMap[rid],
-      出铁记录: [],
-      事件记录: [],
-      停电记录: [],
-      备注: [],
-      参数: {
-        电极下放长度: { A: null, B: null, C: null },
-        电极糊加入量: { A: null, B: null, C: null },
-        有功无功底码: {},
-        其他: {}
-      },
-      电极压放记录: [],
-      变料记录: [],
-      焦炭信息: [],
-      焦炭水分固定碳: []
-    };
-  });
+function extractDatePart(dateTime) {
+  if (!dateTime) return '';
+  const s = String(dateTime).trim();
+  let m = s.match(/^(\d{4})[-\/](\d{1,2})[-\/](\d{1,2})/);
+  if (m) {
+    return m[1] + '-' + String(m[2]).padStart(2, '0') + '-' + String(m[3]).padStart(2, '0');
+  }
+  m = s.match(/^(\d{1,2})[-\/](\d{1,2})[-\/](\d{4})/);
+  if (m) {
+    return m[3] + '-' + String(m[1]).padStart(2, '0') + '-' + String(m[2]).padStart(2, '0');
+  }
+  return '';
+}
 
-  data[SEGMENT.TAPPING].forEach(row => {
-    const rid = row.rid;
-    if (result[ridMap[rid]?.班次]) result[ridMap[rid].班次].出铁记录.push(row);
-  });
+function parseDateTimeLocal(dateTime) {
+  if (!dateTime) return null;
+  const s = String(dateTime).trim();
+  let m = s.match(/^(\d{4})[-\/](\d{1,2})[-\/](\d{1,2})(?:[ T](\d{1,2}):(\d{2})(?::(\d{2}))?)?/);
+  if (!m) {
+    m = s.match(/^(\d{1,2})[-\/](\d{1,2})[-\/](\d{4})(?:[ T](\d{1,2}):(\d{2})(?::(\d{2}))?)?/);
+    if (m) m = [m[0], m[3], m[1], m[2], m[4], m[5], m[6]];
+  }
+  if (!m) return null;
+  return new Date(+m[1], +m[2] - 1, +m[3], +(m[4] || 0), +(m[5] || 0), +(m[6] || 0));
+}
 
-  data[SEGMENT.EVENTS].forEach(row => {
-    const rid = row.rid;
-    if (result[ridMap[rid]?.班次]) result[ridMap[rid].班次].事件记录.push(row);
-  });
+function addDays(dateStr, days) {
+  const d = parseDateTimeLocal(dateStr + ' 00:00:00');
+  if (!d) return dateStr;
+  d.setDate(d.getDate() + days);
+  return normalizeApiDate(d);
+}
 
-  data[SEGMENT.STOP].forEach(row => {
-    const rid = row.rid;
-    if (result[ridMap[rid]?.班次]) result[ridMap[rid].班次].停电记录.push(row);
-  });
+function extractTimePart(dateTime) {
+  if (!dateTime) return '';
+  const s = String(dateTime).trim();
+  let m = s.match(/(\d{1,2}):(\d{2})(?::(\d{2}))?(?:\.\d+)?$/);
+  if (!m) m = s.match(/(\d{1,2}):(\d{2})(?::(\d{2}))?/);
+  if (!m) return '';
+  const h = String(parseInt(m[1], 10)).padStart(2, '0');
+  return h + ':' + m[2] + ':' + (m[3] || '00').padStart(2, '0');
+}
 
-  data[SEGMENT.REMARK].forEach(row => {
-    const rid = row.rid;
-    if (result[ridMap[rid]?.班次]) result[ridMap[rid].班次].备注.push(row);
-  });
+function timeToMinutes(timeStr) {
+  if (!timeStr) return null;
+  const p = timeStr.split(':');
+  return parseInt(p[0], 10) * 60 + parseInt(p[1], 10);
+}
 
-  data[SEGMENT.ELECTRODE_LEN].forEach(row => {
-    const rid = row.rid;
-    const shiftName = ridMap[rid]?.班次;
-    if (shiftName) {
-      const name = row.param_name || '';
-      let phase = null;
-      if (name.includes('A')) phase = 'A';
-      else if (name.includes('B')) phase = 'B';
-      else if (name.includes('C')) phase = 'C';
-      if (phase) result[shiftName].参数.电极下放长度[phase] = row.param_value || row.value;
+/** 夜班：12点前视为次日凌晨（台账日+1），12点及以后视为台账日晚上 */
+function inferDateForNightShiftTime(timeStr, cardDate) {
+  if (!timeStr) return cardDate;
+  const hour = parseInt(timeStr.split(':')[0], 10);
+  if (hour < 12) return addDays(cardDate, 1);
+  return cardDate;
+}
+
+/**
+ * 源库出铁时间通常只有「时分」，API 拼接的日期可能错误（如 08-18）。
+ * 用台账日期 + 时分重新组合为正确的开/关炉时间。
+ */
+function normalizeTappingRow(row, cardDate, shift) {
+  const openTime = extractTimePart(row.open_time);
+  const closeTime = extractTimePart(row.close_time);
+  if (!openTime && !closeTime) return row;
+
+  const isNightShift = String(shift || '').indexOf('夜') >= 0;
+  let openDate = cardDate;
+  let closeDate = cardDate;
+
+  if (isNightShift) {
+    if (openTime) openDate = inferDateForNightShiftTime(openTime, cardDate);
+    if (closeTime) closeDate = inferDateForNightShiftTime(closeTime, cardDate);
+    if (openTime && closeTime) {
+      const openM = timeToMinutes(openTime);
+      const closeM = timeToMinutes(closeTime);
+      if (closeM < openM) closeDate = addDays(openDate, 1);
+    }
+  }
+
+  const normalized = Object.assign({}, row);
+  const origOpenDate = extractDatePart(row.open_time);
+  const origCloseDate = extractDatePart(row.close_time);
+
+  if (openTime) normalized.open_time = openDate + ' ' + openTime;
+  if (closeTime) normalized.close_time = closeDate + ' ' + closeTime;
+
+  normalized._timeCorrected = !!(origOpenDate && origOpenDate !== openDate) ||
+    !!(origCloseDate && origCloseDate !== closeDate);
+  return normalized;
+}
+
+function normalizeTappingRecords(tapping, cardDate, shift) {
+  return (tapping || []).map(row => normalizeTappingRow(row, cardDate, shift));
+}
+
+function tappingDateMatchesCard(openDate, closeDate, cardDate, shift) {
+  if (!openDate && !closeDate) return false;
+  if (String(shift || '').indexOf('夜') >= 0) {
+    const nextDate = addDays(cardDate, 1);
+    const prevDate = addDays(cardDate, -1);
+    const allowed = [cardDate, nextDate, prevDate];
+    return (openDate && allowed.includes(openDate)) || (closeDate && allowed.includes(closeDate));
+  }
+  return openDate === cardDate || closeDate === cardDate;
+}
+
+function filterTappingByCardDate(tapping, cardDate, shift) {
+  if (!cardDate || !tapping.length) {
+    return { records: tapping, fallback: false, hiddenMismatchCount: 0 };
+  }
+
+  const unparsed = [];
+  const matched = [];
+  let mismatchedCount = 0;
+
+  tapping.forEach(t => {
+    const openDate = extractDatePart(t.open_time);
+    const closeDate = extractDatePart(t.close_time);
+
+    if (!openDate && !closeDate) {
+      unparsed.push(t);
+      return;
+    }
+
+    if (tappingDateMatchesCard(openDate, closeDate, cardDate, shift)) {
+      matched.push(t);
+    } else {
+      mismatchedCount++;
     }
   });
 
-  data[SEGMENT.ELECTRODE_PASTE].forEach(row => {
-    const rid = row.rid;
-    const shiftName = ridMap[rid]?.班次;
-    if (shiftName) {
-      const name = row.param_name || '';
-      let phase = null;
-      if (name.includes('A')) phase = 'A';
-      else if (name.includes('B')) phase = 'B';
-      else if (name.includes('C')) phase = 'C';
-      if (phase) result[shiftName].参数.电极糊加入量[phase] = row.param_value || row.value;
-    }
-  });
+  // 全部无法解析日期：信任 API rid 归属
+  if (unparsed.length === tapping.length) {
+    return { records: unparsed, fallback: true, hiddenMismatchCount: 0 };
+  }
 
-  data[SEGMENT.POWER_CODE].forEach(row => {
-    const rid = row.rid;
-    const shiftName = ridMap[rid]?.班次;
-    if (shiftName) result[shiftName].参数.有功无功底码[row.param_name] = row.param_value || row.value;
-  });
+  // 有日期且匹配：只展示匹配的
+  if (matched.length > 0) {
+    return { records: matched, fallback: false, hiddenMismatchCount: mismatchedCount };
+  }
 
-  data[SEGMENT.OTHER_PARAMS].forEach(row => {
-    const rid = row.rid;
-    const shiftName = ridMap[rid]?.班次;
-    if (shiftName) result[shiftName].参数.其他[row.param_name] = row.param_value || row.value;
-  });
-
-  data[SEGMENT.ELECTRODE_PRESS].forEach(row => {
-    const rid = row.rid;
-    const shiftName = ridMap[rid]?.班次;
-    if (shiftName) result[shiftName].电极压放记录.push(row);
-  });
-
-  data[SEGMENT.BATCH].forEach(row => {
-    const rid = row.rid;
-    const shiftName = ridMap[rid]?.班次;
-    if (shiftName) result[shiftName].变料记录.push(row);
-  });
-
-  data[SEGMENT.COKE_NAME].forEach(row => {
-    const rid = row.rid;
-    const shiftName = ridMap[rid]?.班次;
-    if (shiftName) result[shiftName].焦炭信息.push(row);
-  });
-
-  data[SEGMENT.COKE_MOISTURE].forEach(row => {
-    const rid = row.rid;
-    const shiftName = ridMap[rid]?.班次;
-    if (shiftName) result[shiftName].焦炭水分固定碳.push(row);
-  });
-
-  Object.keys(result).forEach(shiftName => {
-    result[shiftName].出铁记录.sort((a, b) => {
-      return (a.open_time || '').localeCompare(b.open_time || '');
-    });
-  });
-
-  return result;
+  // 有日期但无一与台账日期匹配：隐藏错误日期记录（不再回退展示全部）
+  return { records: [], fallback: false, hiddenMismatchCount: mismatchedCount + unparsed.length };
 }
 
-function getShiftData(cardData, shiftName) {
-  return cardData[shiftName] || null;
+function sortTappingRecords(tapping) {
+  return tapping.slice().sort((a, b) => String(a.open_time || '').localeCompare(String(b.open_time || '')));
 }
 
-function getShiftNames(cardData) {
-  return Object.keys(cardData);
+function formatMinutesDuration(mins) {
+  if (mins == null || mins < 0) return null;
+  if (mins >= 60) {
+    const h = Math.floor(mins / 60);
+    const m = mins % 60;
+    return h + '小时' + m + '分钟';
+  }
+  return mins + '分钟';
 }
 
-function formatTappingTable(tappingRecords) {
-  return tappingRecords.map((record, index) => ({
-    序号: index + 1,
-    出铁口: record.tapping_hole,
-    开炉时间: record.open_time,
-    关炉时间: record.close_time,
-    时长: record.duration,
-    铁水包号: record.ladle_no,
-    产量t: record.output_t,
-    铁口深度: record.hole_depth,
-    堵口料: record.plug_material,
-    渣量: record.slag_amount,
-    Mn: record.mn_pct,
-    Si: record.si_pct,
-    P: record.p_pct,
-    C: record.c_pct,
-    S: record.s_pct
-  }));
+function formatTappingDuration(row) {
+  const open = parseDateTimeLocal(row.open_time);
+  const close = parseDateTimeLocal(row.close_time);
+  if (open && close && close >= open) {
+    const mins = Math.round((close - open) / 60000);
+    return formatMinutesDuration(mins) || String(mins);
+  }
+  const parsed = parseDurationToMinutes(row.duration);
+  if (parsed != null && parsed >= 0) return formatMinutesDuration(parsed) || String(parsed);
+  if (row.duration != null && row.duration !== '') return String(row.duration);
+  return '-';
 }
 
-function getShiftSummary(shiftData) {
-  if (!shiftData) return null;
-  const tapping = shiftData.出铁记录;
+function buildShiftIndexFromRaw(segments, queryDate, queryShift) {
+  let mainRows = segments[SEGMENT.MAIN] || [];
+  if (queryShift) {
+    mainRows = mainRows.filter(main => main.shift === queryShift);
+  }
+
+  const byRid = {};
+  const order = [];
+
+  mainRows.forEach(main => {
+    const rid = main.rid;
+    const cardDate = normalizeApiDate(main.date) || queryDate;
+    const rawTapping = filterByRid(segments[SEGMENT.TAPPING], rid);
+    const normalizedTapping = normalizeTappingRecords(rawTapping, cardDate, main.shift);
+    const tapResult = filterTappingByCardDate(normalizedTapping, cardDate, main.shift);
+    let tapping = sortTappingRecords(tapResult.records.length ? tapResult.records : normalizedTapping);
+    const timeCorrectedCount = normalizedTapping.filter(t => t._timeCorrected).length;
+
+    order.push(rid);
+    byRid[rid] = {
+      rid,
+      main,
+      cardDate,
+      tapping,
+      rawTappingCount: rawTapping.length,
+      tappingHiddenCount: tapResult.hiddenMismatchCount,
+      tappingDateFallback: tapResult.fallback,
+      timeCorrectedCount,
+      electrodeLen: filterByRid(segments[SEGMENT.ELECTRODE_LEN], rid),
+      batch: filterByRid(segments[SEGMENT.BATCH], rid)
+    };
+  });
+
+  return { byRid, order, queryDate, queryShift };
+}
+
+function parseDurationToMinutes(duration) {
+  if (duration == null || duration === '') return null;
+  const s = String(duration);
+  let m = s.match(/(\d+)小时(\d+)分钟/);
+  if (m) return parseInt(m[1], 10) * 60 + parseInt(m[2], 10);
+  m = s.match(/^(\d+(?:\.\d+)?)$/);
+  if (m) return Math.round(parseFloat(m[1]));
+  m = s.match(/(\d+):(\d+)/);
+  if (m) return parseInt(m[1], 10) * 60 + parseInt(m[2], 10);
+  return null;
+}
+
+function getShiftSummaryFromRaw(shiftData) {
+  const main = shiftData.main || {};
+  const tapping = shiftData.tapping || [];
   const totalOutput = tapping.reduce((sum, r) => sum + (parseFloat(r.output_t) || 0), 0);
-  const totalDuration = tapping.reduce((sum, r) => {
-    const match = String(r.duration || '').match(/(\d+)小时(\d+)分钟/);
-    if (match) return sum + parseInt(match[1]) * 60 + parseInt(match[2]);
-    return sum;
-  }, 0);
+
+  let totalMinutes = 0;
+  let hasDuration = false;
+  tapping.forEach(r => {
+    const open = parseDateTimeLocal(r.open_time);
+    const close = parseDateTimeLocal(r.close_time);
+    if (open && close && close >= open) {
+      totalMinutes += Math.round((close - open) / 60000);
+      hasDuration = true;
+      return;
+    }
+    const mins = parseDurationToMinutes(r.duration);
+    if (mins != null && mins >= 0) {
+      totalMinutes += mins;
+      hasDuration = true;
+    }
+  });
+
+  let totalDuration;
+  if (hasDuration) {
+    totalDuration = formatMinutesDuration(totalMinutes) || totalMinutes + '分钟';
+  } else {
+    totalDuration = '-';
+  }
 
   return {
-    出铁炉数: tapping.length,
-    总产量: totalOutput.toFixed(2) + 't',
-    总时长: Math.floor(totalDuration / 60) + '小时' + (totalDuration % 60) + '分钟',
-    班组: shiftData.班组,
-    炉长: shiftData.炉长,
-    操作工: shiftData.操作工
+    shift: main.shift,
+    team: main.team,
+    dutySupervisor: getDutySupervisor(main),
+    tapCount: tapping.length,
+    totalOutput: totalOutput.toFixed(2) + 't',
+    totalDuration
   };
 }
 
-function renderSmeltingCard(cardData) {
-  const shifts = getShiftNames(cardData);
-  let html = '<div class="smelting-card-container">';
-  shifts.forEach(shiftName => {
-    const shiftData = getShiftData(cardData, shiftName);
-    const summary = getShiftSummary(shiftData);
-    const tappingTable = formatTappingTable(shiftData.出铁记录);
-    html += `
-    <div class="shift-section" style="margin-bottom:24px;">
-      <h2 style="font-size:16px;font-weight:700;color:var(--primary);margin-bottom:12px;">${shiftName} - ${shiftData.班组}</h2>
-      <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:12px;font-size:13px;color:var(--text2);">
-        <span>炉长: ${summary.炉长}</span>
-        <span>操作工: ${summary.操作工}</span>
-        <span>出铁炉数: ${summary.出铁炉数}</span>
-        <span>总产量: ${summary.总产量}</span>
-        <span>总时长: ${summary.总时长}</span>
-      </div>
-      <h3 style="font-size:14px;font-weight:600;margin-bottom:8px;">出铁记录</h3>
-      <div style="overflow-x:auto;">
-      <table style="width:100%;border-collapse:collapse;font-size:12px;">
-        <thead>
-          <tr style="background:#f1f5f9;">
-            <th style="padding:6px 8px;border:1px solid #e2e8f0;text-align:left;">序号</th>
-            <th style="padding:6px 8px;border:1px solid #e2e8f0;text-align:left;">出铁口</th>
-            <th style="padding:6px 8px;border:1px solid #e2e8f0;text-align:left;">开炉时间</th>
-            <th style="padding:6px 8px;border:1px solid #e2e8f0;text-align:left;">关炉时间</th>
-            <th style="padding:6px 8px;border:1px solid #e2e8f0;text-align:left;">时长</th>
-            <th style="padding:6px 8px;border:1px solid #e2e8f0;text-align:left;">铁水包号</th>
-            <th style="padding:6px 8px;border:1px solid #e2e8f0;text-align:left;">产量t</th>
-            <th style="padding:6px 8px;border:1px solid #e2e8f0;text-align:left;">Mn</th>
-            <th style="padding:6px 8px;border:1px solid #e2e8f0;text-align:left;">Si</th>
-          </tr>
-        </thead>
-        <tbody>
-          ${tappingTable.map(row => `
-            <tr>
-              <td style="padding:6px 8px;border:1px solid #e2e8f0;">${row.序号}</td>
-              <td style="padding:6px 8px;border:1px solid #e2e8f0;">${row.出铁口}</td>
-              <td style="padding:6px 8px;border:1px solid #e2e8f0;">${row.开炉时间}</td>
-              <td style="padding:6px 8px;border:1px solid #e2e8f0;">${row.关炉时间}</td>
-              <td style="padding:6px 8px;border:1px solid #e2e8f0;">${row.时长}</td>
-              <td style="padding:6px 8px;border:1px solid #e2e8f0;">${row.铁水包号}</td>
-              <td style="padding:6px 8px;border:1px solid #e2e8f0;">${row.产量t}</td>
-              <td style="padding:6px 8px;border:1px solid #e2e8f0;">${row.Mn}</td>
-              <td style="padding:6px 8px;border:1px solid #e2e8f0;">${row.Si}</td>
-            </tr>
-          `).join('')}
-        </tbody>
-      </table>
-      </div>
-      <h3 style="font-size:14px;font-weight:600;margin:12px 0 8px;">参数信息</h3>
-      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;">
-        <div style="background:#f8fafc;padding:10px;border-radius:6px;">
-          <h4 style="font-size:12px;color:var(--text2);margin-bottom:6px;">电极下放长度</h4>
-          <p style="font-size:13px;">A相: ${shiftData.参数.电极下放长度.A || '-'}</p>
-          <p style="font-size:13px;">B相: ${shiftData.参数.电极下放长度.B || '-'}</p>
-          <p style="font-size:13px;">C相: ${shiftData.参数.电极下放长度.C || '-'}</p>
-        </div>
-        <div style="background:#f8fafc;padding:10px;border-radius:6px;">
-          <h4 style="font-size:12px;color:var(--text2);margin-bottom:6px;">电极糊加入量</h4>
-          <p style="font-size:13px;">A相: ${shiftData.参数.电极糊加入量.A || '-'}</p>
-          <p style="font-size:13px;">B相: ${shiftData.参数.电极糊加入量.B || '-'}</p>
-          <p style="font-size:13px;">C相: ${shiftData.参数.电极糊加入量.C || '-'}</p>
-        </div>
-        <div style="background:#f8fafc;padding:10px;border-radius:6px;">
-          <h4 style="font-size:12px;color:var(--text2);margin-bottom:6px;">有功无功底码</h4>
-          ${Object.entries(shiftData.参数.有功无功底码).map(([k, v]) => `<p style="font-size:13px;">${k}: ${v}</p>`).join('')}
-        </div>
-      </div>
-    </div>
-    `;
+function normalizeApiDate(dateVal) {
+  if (!dateVal) return '';
+  if (dateVal instanceof Date && !isNaN(dateVal.getTime())) {
+    const y = dateVal.getFullYear();
+    const mo = String(dateVal.getMonth() + 1).padStart(2, '0');
+    const da = String(dateVal.getDate()).padStart(2, '0');
+    return y + '-' + mo + '-' + da;
+  }
+  const s = String(dateVal).trim();
+  const m = s.match(/^(\d{4}-\d{2}-\d{2})/);
+  if (m) return m[1];
+  const d = new Date(s);
+  if (!isNaN(d.getTime())) {
+    const y = d.getFullYear();
+    const mo = String(d.getMonth() + 1).padStart(2, '0');
+    const da = String(d.getDate()).padStart(2, '0');
+    return y + '-' + mo + '-' + da;
+  }
+  return s;
+}
+
+function mapApiTeamToForm(team) {
+  const map = { '甲班': 'first', '乙班': 'second', '丙班': 'third' };
+  return map[team] || '';
+}
+
+function mapApiShiftToForm(shift) {
+  if (shift === '白班') return 'day';
+  if (shift === '夜班') return 'night';
+  return '';
+}
+
+function isSouthHole(hole) {
+  const h = String(hole || '');
+  return h.indexOf('南') >= 0 || h.indexOf('东') >= 0 ||
+         /(^|[^a-z])s($|[^a-z])/i.test(h) || h.indexOf('1号') >= 0 || h === '1';
+}
+
+function isNorthHole(hole) {
+  const h = String(hole || '');
+  return h.indexOf('北') >= 0 || h.indexOf('西') >= 0 ||
+         /(^|[^a-z])n($|[^a-z])/i.test(h) || h.indexOf('2号') >= 0 || h === '2';
+}
+
+function classifyTappingRecords(tapping) {
+  const south = [];
+  const north = [];
+  const other = [];
+  (tapping || []).forEach(t => {
+    if (isSouthHole(t.tapping_hole)) south.push(t);
+    else if (isNorthHole(t.tapping_hole)) north.push(t);
+    else other.push(t);
   });
+  return { south, north, other };
+}
+
+function normalizeFurnaceNo(val) {
+  return String(val == null ? '' : val).replace(/炉$/, '').trim();
+}
+
+/**
+ * 从 main 段提取值班长（101/102/201/202 统一规则）
+ * - leader / leader2 = 值班长（可有两人，都输出）
+ * - operator / operator2 = 电操工（不要输出）
+ */
+function getDutySupervisor(main) {
+  if (!main) return '';
+  const names = [];
+  const a = String(main.leader || '').trim();
+  const b = String(main.leader2 || '').trim();
+  if (a) names.push(a);
+  if (b && b !== a) names.push(b);
+  return names.join('、');
+}
+
+function apiParamValue(row) {
+  if (row.param_value != null && row.param_value !== '') return row.param_value;
+  if (row.value != null && row.value !== '') return row.value;
+  return '';
+}
+
+function apiRowsToText(rows) {
+  return rows.map(row => {
+    return Object.keys(row)
+      .filter(k => k !== 'rid' && k !== 'ALIAS_ROW_NUM')
+      .map(k => `${k}:${row[k]}`)
+      .join('，');
+  }).filter(Boolean).join('\n');
+}
+
+function setFormFieldValue(id, value) {
+  const el = document.getElementById(id);
+  if (!el || value == null || value === '') return;
+  el.value = String(value);
+}
+
+function setSelectValueIfOption(id, value) {
+  const el = document.getElementById(id);
+  if (!el || value == null || value === '') return;
+  const strVal = String(value);
+  const hasOption = Array.from(el.options).some(opt => opt.value === strVal || opt.text === strVal);
+  if (hasOption) el.value = strVal;
+  else if (el.tagName === 'INPUT') el.value = strVal;
+}
+
+function getElectrodePhase(paramName) {
+  const name = String(paramName || '');
+  if (name.includes('A')) return 'A';
+  if (name.includes('B')) return 'B';
+  if (name.includes('C')) return 'C';
+  return null;
+}
+
+function sumSlagAmount(records) {
+  let sum = 0;
+  let has = false;
+  records.forEach(r => {
+    if (r.slag_amount != null && r.slag_amount !== '') {
+      sum += parseFloat(r.slag_amount) || 0;
+      has = true;
+    }
+  });
+  return has ? sum : null;
+}
+
+/** 铁口深度汇总显示：（1200、1200、1200） */
+function formatHoleDepths(records) {
+  const depths = (records || [])
+    .map(r => r.hole_depth)
+    .filter(v => v != null && String(v).trim() !== '');
+  if (!depths.length) return '';
+  return '（' + depths.join('、') + '）';
+}
+
+/** 渣量汇总显示：（2+2+2） */
+function formatSlagAmounts(records) {
+  const amounts = (records || [])
+    .map(r => r.slag_amount)
+    .filter(v => v != null && String(v).trim() !== '');
+  if (!amounts.length) return '';
+  return '（' + amounts.join('+') + '）';
+}
+
+function getFormElectrodeValues(electrodeLenRows) {
+  const result = { A: '', B: '', C: '' };
+  (electrodeLenRows || []).forEach(row => {
+    const phase = getElectrodePhase(row.param_name);
+    const val = apiParamValue(row);
+    if (phase && val !== '') result[phase] = val;
+  });
+  return result;
+}
+
+function smeltingKvItem(label, value) {
+  if (value == null || value === '') return '';
+  return '<div class="smelting-kv"><span class="k">' + escapeHtml(label) + '</span><span class="v">' + escapeHtml(value) + '</span></div>';
+}
+
+const FORM_TAPPING_COLUMNS = [
+  { key: 'tapping_hole', label: '出铁口' },
+  { key: 'hole_depth', label: '铁口深度(mm)' },
+  { key: 'slag_amount', label: '渣量(包)' },
+  { key: 'output_t', label: '产量(t)' },
+  { key: 'open_time', label: '开炉时间' },
+  { key: 'close_time', label: '关炉时间' },
+  { key: 'duration', label: '时长' }
+];
+
+function renderFormTappingTable(tapping, cardDate, shift) {
+  const rows = normalizeTappingRecords(tapping, cardDate, shift);
+  if (!rows.length) return '';
+  let html = '<div class="smelting-section"><h4>出铁明细</h4><div class="smelting-table-wrap"><table class="smelting-table"><thead><tr>';
+  FORM_TAPPING_COLUMNS.forEach(c => { html += '<th>' + c.label + '</th>'; });
+  html += '</tr></thead><tbody>';
+  rows.forEach(row => {
+    const open = parseDateTimeLocal(row.open_time);
+    const close = parseDateTimeLocal(row.close_time);
+    const timeInvalid = open && close && close < open;
+    html += '<tr' + (timeInvalid ? ' style="background:#fef2f2;"' : '') + '>';
+    FORM_TAPPING_COLUMNS.forEach(c => {
+      let val = row[c.key];
+      if (c.key === 'duration') val = formatTappingDuration(row);
+      html += '<td>' + escapeHtml(val != null ? val : '') + '</td>';
+    });
+    html += '</tr>';
+  });
+  html += '</tbody></table></div></div>';
+  return html;
+}
+
+function renderSmeltingShiftDetailCard(shiftData, rid) {
+  const main = shiftData.main || {};
+  const tapping = shiftData.tapping || [];
+  const cardDate = shiftData.cardDate || normalizeApiDate(main.date);
+  const classified = classifyTappingRecords(tapping);
+  const { south: southRecords, north: northRecords, other: otherRecords } = classified;
+  const electrode = getFormElectrodeValues(shiftData.electrodeLen);
+  const summary = getShiftSummaryFromRaw(shiftData);
+  const isSingleHoleFurnace = southRecords.length === 0 && northRecords.length === 0 && tapping.length > 0;
+
+  let html = '<div class="smelting-shift-card">';
+  html += '<div class="shift-title">' + escapeHtml(main.shift || '') + ' - ' + escapeHtml(main.team || '') + '</div>';
+
+  if (smeltingQueryContext && cardDate && smeltingQueryContext.date && cardDate !== smeltingQueryContext.date) {
+    html += '<div class="smelting-empty-tip" style="color:var(--orange);margin-bottom:8px;">⚠ 台账日期 ' + escapeHtml(cardDate) + ' 与查询日期 ' + escapeHtml(smeltingQueryContext.date) + ' 不一致</div>';
+  }
+
+  html += '<div class="smelting-section"><h4>基本信息</h4><div class="smelting-kv-grid">';
+  html += smeltingKvItem('炉号', main.furnace_no);
+  html += smeltingKvItem('台账日期', cardDate);
+  html += smeltingKvItem('班次', main.shift);
+  html += smeltingKvItem('班组', main.team);
+  html += smeltingKvItem('值班长', getDutySupervisor(main));
+  html += '</div></div>';
+
+  html += '<div class="smelting-section"><h4>出铁信息</h4><div class="smelting-kv-grid">';
+  html += smeltingKvItem('出铁炉数', tapping.length);
+  if (isSingleHoleFurnace) {
+    html += smeltingKvItem('铁口标注', otherRecords.map(r => r.tapping_hole || '未标注').join('、') || '未标注');
+    const allDepth = formatHoleDepths(tapping);
+    if (allDepth) html += smeltingKvItem('铁口深度(mm)', allDepth);
+    const slagText = formatSlagAmounts(tapping);
+    if (slagText) html += smeltingKvItem('渣量(包)', slagText);
+  } else {
+    html += smeltingKvItem('南面炉数', southRecords.length || '');
+    html += smeltingKvItem('北面炉数', northRecords.length || '');
+    const southDepth = formatHoleDepths(southRecords);
+    const northDepth = formatHoleDepths(northRecords);
+    if (southDepth) html += smeltingKvItem('南面铁口深度(mm)', southDepth);
+    if (northDepth) html += smeltingKvItem('北面铁口深度(mm)', northDepth);
+    const southSlag = formatSlagAmounts(southRecords);
+    const northSlag = formatSlagAmounts(northRecords);
+    if (southSlag) html += smeltingKvItem('南面渣量(包)', southSlag);
+    if (northSlag) html += smeltingKvItem('北面渣量(包)', northSlag);
+  }
+  html += smeltingKvItem('总产量', summary.totalOutput);
+  html += smeltingKvItem('总时长', summary.totalDuration);
+  html += '</div></div>';
+
+  if (shiftData.timeCorrectedCount > 0) {
+    html += '<div class="smelting-empty-tip" style="margin-bottom:8px;color:var(--text2);">ℹ 出铁开/关炉时间已按台账日期（' + escapeHtml(cardDate) + '）+ 源库时分校正（API 返回的日期字段有误）</div>';
+  }
+  if (shiftData.tappingHiddenCount > 0) {
+    html += '<div class="smelting-empty-tip" style="margin-bottom:8px;color:var(--orange);">⚠ 已隐藏 ' + shiftData.tappingHiddenCount + ' 条无法匹配台账日期 ' + escapeHtml(cardDate) + ' 的出铁记录</div>';
+  }
+  if (shiftData.tappingDateFallback) {
+    html += '<div class="smelting-empty-tip" style="margin-bottom:8px;">出铁记录无日期字段，已按 rid 归属展示 ' + tapping.length + ' 条</div>';
+  }
+  if (tapping.length === 0 && shiftData.rawTappingCount > 0) {
+    html += '<div class="smelting-section empty"><h4>出铁明细</h4><div class="smelting-empty-tip">台账日期 ' + escapeHtml(cardDate) + ' 下无匹配的出铁时间（API 返回 ' + shiftData.rawTappingCount + ' 条但日期均不符）</div></div>';
+  } else {
+    html += renderFormTappingTable(tapping, cardDate, main.shift);
+  }
+
+  html += '<div class="smelting-section"><h4>电极压放量</h4><div class="smelting-kv-grid">';
+  html += smeltingKvItem('A相', electrode.A);
+  html += smeltingKvItem('B相', electrode.B);
+  html += smeltingKvItem('C相', electrode.C);
+  html += '</div></div>';
+
+  if (shiftData.batch && shiftData.batch.length) {
+    html += '<div class="smelting-section"><h4>变料情况</h4><div class="smelting-empty-tip">共 ' + shiftData.batch.length + ' 条变料记录，填充时将写入表单</div></div>';
+  }
+
+  html += '<button class="btn btn-primary btn-sm" style="margin-top:12px;" onclick="applySmeltingToForm(' + rid + ')">📝 填充到表单</button>';
   html += '</div>';
   return html;
 }
@@ -1152,9 +1473,9 @@ function getSystemField(selectId, customId) {
 }
 function buildText() {
     const parts = [];
-    // ====== [新增] 值班员字段，生成文本开头输出 ======
+    // ====== [新增] 值班长字段，生成文本开头输出 ======
     const dutyOfficer = getVal('dutyOfficer');
-    if (dutyOfficer) parts.push(`值班员：${dutyOfficer}`);
+    if (dutyOfficer) parts.push(`值班长：${dutyOfficer}`);
     const team = getVal('team');
     const teamLabel = { first: '甲班', second: '乙班', third: '丙班' }[team] || '';
     if (teamLabel) parts.push(`班组：${teamLabel}`);
@@ -1351,7 +1672,7 @@ function loadPrevRecord() {
 }
 
 function fillDemo() {
-    // [新增] 示例数据填入炉号和值班员
+    // [新增] 示例数据填入炉号和值班长
     document.getElementById('furnaceNumber').value = '101';
     document.getElementById('team').value = 'first';
     document.getElementById('dutyOfficer').value = '张治顺、陆斌';
@@ -1408,7 +1729,7 @@ function renderRecords() {
     const shift = document.getElementById('filterShift').value;
     const teamFilter = document.getElementById('filterTeam').value;
     const search = document.getElementById('filterSearch').value.toLowerCase();
-    // [新增] 获取值班员筛选关键词
+    // [新增] 获取值班长筛选关键词
     const dutyFilter = document.getElementById('filterDuty').value.toLowerCase().trim();
 
     let filtered = records.filter(r => {
@@ -1417,7 +1738,7 @@ function renderRecords() {
         if (dateTo && r.date > dateTo) return false;
         if (shift && r.shift !== shift) return false;
         if (teamFilter && r.team !== teamFilter) return false;
-        if (dutyFilter && !(r.dutyOfficer || '').toLowerCase().includes(dutyFilter)) return false;  // [新增] 值班员筛选逻辑
+        if (dutyFilter && !(r.dutyOfficer || '').toLowerCase().includes(dutyFilter)) return false;  // [新增] 值班长筛选逻辑
         if (search && !r.content.toLowerCase().includes(search)) return false;
         return true;
     });
@@ -1456,7 +1777,7 @@ function renderRecords() {
                     <span class="date-badge">${r.furnaceNumber}炉</span>
                     <span class="shift-tag ${shiftClass}">${shiftLabel}</span>
                     ${teamLabel ? `<span class="shift-tag" style="background:#eef2ff;color:#4338ca;">${teamLabel}</span>` : ''}
-                    ${r.dutyOfficer ? `<span style="font-size:12px;color:var(--text2);">👤 ${escapeHtml(r.dutyOfficer)}</span>` : ''}  <!-- [新增] 卡片头部显示值班员 -->
+                    ${r.dutyOfficer ? `<span style="font-size:12px;color:var(--text2);">👤 ${escapeHtml(r.dutyOfficer)}</span>` : ''}  <!-- [新增] 卡片头部显示值班长 -->
                     <span style="flex:1"></span>
                     <span style="font-size:11px;color:var(--text3);">${r.content.length}字</span>
                 </div>
@@ -1486,7 +1807,7 @@ function editRecord(id) {
     document.getElementById('editDate').value = r.date;
     document.getElementById('editShift').value = r.shift;
     document.getElementById('editTeam').value = r.team || 'first';
-    document.getElementById('editDuty').value = r.dutyOfficer || '';  // [新增] 编辑时回填值班员
+    document.getElementById('editDuty').value = r.dutyOfficer || '';  // [新增] 编辑时回填值班长
     document.getElementById('editContent').value = r.content;
     const _teamMap = { first: '甲班', second: '乙班', third: '丙班' };
     document.getElementById('editModalTitle').textContent = `编辑记录 - ${r.furnaceNumber}炉 ${formatDateDisplay(r.date)} ${r.shift === 'day' ? '白班' : '夜班'}${_teamMap[r.team] ? ' ' + _teamMap[r.team] : ''}`;
@@ -1506,7 +1827,7 @@ function saveEditedRecord() {
     records[idx].date = document.getElementById('editDate').value;
     records[idx].shift = document.getElementById('editShift').value;
     records[idx].team = document.getElementById('editTeam').value;
-    records[idx].dutyOfficer = document.getElementById('editDuty').value.trim();  // [新增] 保存编辑后的值班员
+    records[idx].dutyOfficer = document.getElementById('editDuty').value.trim();  // [新增] 保存编辑后的值班长
     records[idx].content = document.getElementById('editContent').value;
     records[idx].updatedAt = new Date().toISOString();
     saveRecords();
@@ -1555,7 +1876,7 @@ function clearFilters() {
     document.getElementById('filterDateTo').value = '';
     document.getElementById('filterShift').value = '';
     document.getElementById('filterTeam').value = '';
-    document.getElementById('filterDuty').value = '';  // [新增] 清除值班员筛选
+    document.getElementById('filterDuty').value = '';  // [新增] 清除值班长筛选
     document.getElementById('filterSearch').value = '';
     renderRecords();
 }
@@ -1784,7 +2105,8 @@ function formatDateDisplay(dateStr) {
 }
 
 function escapeHtml(str) {
-    return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\n/g, '<br>');
+    if (str == null) return '';
+    return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\n/g, '<br>');
 }
 
 function showToast(msg, type) {
@@ -1824,71 +2146,89 @@ async function doSmeltingFetch() {
     resultDiv.innerHTML = '<p style="color:var(--text3);">⏳ 正在获取数据...</p>';
 
     try {
-        var data = await fetchSmeltingCard(furnace, date, shift || null);
-        var shifts = Object.keys(data);
-        if (shifts.length === 0) {
+        var fetched = await fetchSmeltingCard(furnace, date, shift || null);
+        var index = fetched.index;
+        if (!index.order.length) {
             resultDiv.innerHTML = '<p style="color:var(--text3);">该日期暂无冶炼数据</p>';
             return;
         }
 
         var html = '<div style="margin-top:8px;">';
-        shifts.forEach(function(shiftName) {
-            var shiftData = data[shiftName];
-            var summary = getShiftSummary(shiftData);
-            html += '<div style="margin-bottom:12px;padding:12px;background:#f8fafc;border-radius:8px;">';
-            html += '<div style="font-weight:600;color:var(--primary);margin-bottom:6px;">' + shiftName + ' - ' + (shiftData.班组 || '') + '</div>';
-            html += '<div style="font-size:13px;color:var(--text2);line-height:1.8;">';
-            html += '炉长: ' + (summary.炉长 || '-') + ' | ';
-            html += '操作工: ' + (summary.操作工 || '-') + '<br>';
-            html += '出铁炉数: ' + summary.出铁炉数 + ' | ';
-            html += '总产量: ' + summary.总产量 + ' | ';
-            html += '总时长: ' + summary.总时长;
-            html += '</div>';
-            html += '<button class="btn btn-primary btn-sm" style="margin-top:8px;" onclick="applySmeltingToForm(\'' + shiftName + '\')">📝 填充到表单</button>';
-            html += '</div>';
+        index.order.forEach(function(rid) {
+            html += renderSmeltingShiftDetailCard(index.byRid[rid], rid);
         });
         html += '</div>';
         resultDiv.innerHTML = html;
-
-        window._smeltingData = data;
     } catch(err) {
-        resultDiv.innerHTML = '<p style="color:var(--red);">❌ 获取失败: ' + err.message + '</p>';
+        resultDiv.innerHTML = '<p style="color:var(--red);">❌ 获取失败: ' + escapeHtml(err.message) + '</p>';
     }
 }
 
-function applySmeltingToForm(shiftName) {
-    var data = window._smeltingData;
-    if (!data || !data[shiftName]) { showToast('数据不存在', 'error'); return; }
+function applySmeltingToForm(rid) {
+    if (!smeltingShiftIndex || !smeltingShiftIndex.byRid[rid]) {
+        showToast('数据不存在', 'error');
+        return;
+    }
 
-    var shiftData = data[shiftName];
-    var tapping = shiftData.出铁记录 || [];
+    var shiftData = smeltingShiftIndex.byRid[rid];
+    var main = shiftData.main;
+    var tapping = shiftData.tapping || [];
 
-    document.getElementById('furnaceNumber').value = shiftData.炉号 || document.getElementById('smeltingFurnace').value;
-    document.getElementById('recordDate').value = document.getElementById('smeltingDate').value;
-    document.getElementById('shiftType').value = shiftName.indexOf('白') >= 0 ? 'day' : 'night';
+    setSelectValueIfOption('furnaceNumber', normalizeFurnaceNo(main.furnace_no));
+    setFormFieldValue('recordDate', shiftData.cardDate || normalizeApiDate(main.date));
+    var formShift = mapApiShiftToForm(main.shift);
+    if (formShift) document.getElementById('shiftType').value = formShift;
+    var formTeam = mapApiTeamToForm(main.team);
+    if (formTeam) document.getElementById('team').value = formTeam;
+    setFormFieldValue('dutyOfficer', getDutySupervisor(main));
     updateHeaderFurnace();
 
-    document.getElementById('ironCount').value = tapping.length || '';
+    if (tapping.length > 0) {
+        setSelectValueIfOption('ironCount', tapping.length);
+    }
 
-    var south = 0, north = 0;
-    var southRec = null, northRec = null;
-    tapping.forEach(function(t) {
-        var hole = t.tapping_hole || '';
-        if (hole.indexOf('南') >= 0 || hole.indexOf('S') >= 0 || hole.indexOf('s') >= 0) { south++; if (!southRec) southRec = t; }
-        else if (hole.indexOf('北') >= 0 || hole.indexOf('N') >= 0 || hole.indexOf('n') >= 0) { north++; if (!northRec) northRec = t; }
+    var classified = classifyTappingRecords(tapping);
+    var southRecords = classified.south;
+    var northRecords = classified.north;
+    var otherRecords = classified.other;
+
+    if (southRecords.length > 0) setSelectValueIfOption('southCount', southRecords.length);
+    if (northRecords.length > 0) setSelectValueIfOption('northCount', northRecords.length);
+
+    if (southRecords[0] && southRecords[0].hole_depth != null && southRecords[0].hole_depth !== '') {
+        setFormFieldValue('southDepth', southRecords[0].hole_depth);
+    }
+    if (northRecords[0] && northRecords[0].hole_depth != null && northRecords[0].hole_depth !== '') {
+        setFormFieldValue('northDepth', northRecords[0].hole_depth);
+    }
+
+    var southSlag = sumSlagAmount(southRecords);
+    var northSlag = sumSlagAmount(northRecords);
+    if (southSlag != null) setFormFieldValue('southSlag', southSlag);
+    if (northSlag != null) setFormFieldValue('northSlag', northSlag);
+
+    // 201/202 等未标注南/北的铁口：仍填充出铁炉数、深度、渣量
+    if (southRecords.length === 0 && northRecords.length === 0 && otherRecords.length > 0) {
+        var first = otherRecords[0];
+        if (first.hole_depth != null && first.hole_depth !== '') {
+            setFormFieldValue('southDepth', first.hole_depth);
+        }
+        var otherSlag = sumSlagAmount(otherRecords);
+        if (otherSlag != null) setFormFieldValue('southSlag', otherSlag);
+    }
+
+    shiftData.electrodeLen.forEach(function(row) {
+        var phase = getElectrodePhase(row.param_name);
+        var val = apiParamValue(row);
+        if (phase === 'A' && val !== '') setFormFieldValue('electrodeA', val);
+        if (phase === 'B' && val !== '') setFormFieldValue('electrodeB', val);
+        if (phase === 'C' && val !== '') setFormFieldValue('electrodeC', val);
     });
-    document.getElementById('southCount').value = south || '';
-    document.getElementById('northCount').value = north || '';
 
-    if (southRec) {
-        document.getElementById('southTapOp').value = '打开';
-        if (southRec.hole_depth) document.getElementById('southDepth').value = southRec.hole_depth;
-    }
-    if (northRec) {
-        document.getElementById('northTapOp').value = '打开';
-        if (northRec.hole_depth) document.getElementById('northDepth').value = northRec.hole_depth;
-    }
+    var batchText = apiRowsToText(shiftData.batch);
+    if (batchText) setFormFieldValue('materialChange', batchText);
 
+    syncSystemCustomVisibility();
     updatePreview();
     saveDraft();
     showToast('已填充冶炼数据到表单', 'success');

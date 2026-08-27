@@ -1,5 +1,7 @@
 
 
+
+
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
@@ -89,6 +91,7 @@
         .form-row.cols-2 { grid-template-columns: 1fr 1fr; }
         .form-row.cols-3 { grid-template-columns: 1fr 1fr 1fr; }
         .form-row.cols-4 { grid-template-columns: 1fr 1fr 1fr 1fr; }
+        .form-row.cols-5 { grid-template-columns: repeat(5, 1fr); }
         .form-group { display: flex; flex-direction: column; gap: 4px; }
         .form-group label {
             font-size: 12px; color: var(--text2); font-weight: 500; white-space: nowrap;
@@ -217,12 +220,13 @@
         /* Responsive */
         @media (max-width: 640px) {
             .form-row.cols-2, .form-row.cols-3, .form-row.cols-4 { grid-template-columns: 1fr 1fr; }
+            .form-row.cols-5 { grid-template-columns: 1fr 1fr 1fr; }
             .header h1 span { display: none; }
             .filter-bar { flex-direction: column; }
             .stat-grid { grid-template-columns: 1fr 1fr; }
         }
         @media (max-width: 400px) {
-            .form-row.cols-2, .form-row.cols-3, .form-row.cols-4 { grid-template-columns: 1fr; }
+            .form-row.cols-2, .form-row.cols-3, .form-row.cols-4, .form-row.cols-5 { grid-template-columns: 1fr; }
         }
         /* Quick actions bar */
         .quick-bar {
@@ -280,7 +284,7 @@
         <div class="card-header"><span class="section-icon">📌</span><h3>基本信息</h3></div>
         <div class="card-body">
             <!-- ====== [新增+修改] 基本信息栏从3列改为4列，新增"值班员"输入框 ====== -->
-            <div class="form-row cols-4">
+            <div class="form-row cols-5">
                 <div class="form-group">
                     <label>炉号</label>
                     <select id="furnaceNumber" onchange="updateHeaderFurnace()">
@@ -299,6 +303,14 @@
                     <select id="shiftType">
                         <option value="day">白班</option>
                         <option value="night">夜班</option>
+                    </select>
+                </div>
+                 <div class="form-group">
+                    <label>班组</label>
+                    <select id="team">
+                        <option value="first">甲班</option>
+                        <option value="second">乙班</option>
+                        <option value="third">丙班</option>
                     </select>
                 </div>
                 <!-- [新增] 值班员手输框 -->
@@ -332,11 +344,11 @@
             <div class="form-row cols-2">
                 <div class="form-group">
                     <label>南面铁口</label>
-                    <select id="southTapOp"><option value="">-</option><option value="打开">打开</option><option value="烧开">烧开</option></select>
+                    <select id="southTapOp"><option value="">-</option><option value="打开">打开</option><option value="烧开">烧开</option><option value="捅开">捅开</option></select>
                 </div>
                 <div class="form-group">
                     <label>北面铁口</label>
-                    <select id="northTapOp"><option value="">-</option><option value="打开">打开</option><option value="烧开">烧开</option></select>
+                    <select id="northTapOp"><option value="">-</option><option value="打开">打开</option><option value="烧开">烧开</option><option value="捅开">捅开</option></select>
                 </div>
             </div>
             <div class="form-row cols-2">
@@ -359,7 +371,7 @@
             <div class="sub-title">南面</div>
             <div class="form-row cols-3">
                 <div class="form-group">
-                    <label>炉温（流动性）</label>
+                    <label>渣铁流动性</label>
                     <select id="southFluidity"><option value="">-</option><option>好</option><option>一般</option><option>不好</option></select>
                 </div>
                 <div class="form-group">
@@ -388,13 +400,13 @@
             <div class="form-row cols-2">
                 <div class="form-group">
                     <label>渣量 (包)</label>
-                    <select id="southSlag"><option value="">-</option><option>0</option><option>半包</option><option>1</option><option>大半包</option><option>2</option><option>满包</option><option>3</option></select>
+                    <input type="number" id="southSlag" min="0" step="0.5" placeholder="请输入包数">
                 </div>
             </div>
             <div class="sub-title">北面</div>
             <div class="form-row cols-3">
                 <div class="form-group">
-                    <label>炉温（流动性）</label>
+                    <label>渣铁流动性</label>
                     <select id="northFluidity"><option value="">-</option><option>好</option><option>一般</option><option>不好</option></select>
                 </div>
                 <div class="form-group">
@@ -423,7 +435,7 @@
             <div class="form-row cols-2">
                 <div class="form-group">
                     <label>渣量 (包)</label>
-                    <select id="northSlag"><option value="">-</option><option>0</option><option>半包</option><option>1</option><option>大半包</option><option>2</option><option>满包</option><option>3</option></select>
+                    <input type="number" id="northSlag" min="0" step="0.5" placeholder="请输入包数">
                 </div>
             </div>
         </div>
@@ -568,11 +580,15 @@
         <input type="date" id="filterDateTo" onchange="renderRecords()">
         <label>班次:</label>
         <select id="filterShift" onchange="renderRecords()">
-            <option value="day">白班</option><option value="night">夜班</option>
+            <option value="">全部</option><option value="day">白班</option><option value="night">夜班</option>
+        </select>
+         <label>班组:</label>
+        <select id="filterTeam" onchange="renderRecords()">
+            <option value="">全部</option><option value="first">甲班</option><option value="second">乙班</option><option value="third">丙班</option>
         </select>
         <!-- [新增] 值班员筛选输入框 -->
         <label>值班员:</label>
-        <input type="text" id="filterDuty" placeholder="输入值班员姓名..." oninput="renderRecords()" style="min-width:120px;">
+        <input type="text" id="filterDuty" placeholder="值班员" oninput="renderRecords()" style="width:90px; flex:0 0 auto;">
         <input type="text" id="filterSearch" placeholder="搜索关键词..." oninput="renderRecords()" style="flex:1; min-width:120px;">
         <button class="btn btn-outline btn-sm" onclick="clearFilters()">清除筛选</button>
     </div>
@@ -625,7 +641,7 @@
         </div>
         <div class="modal-body">
             <!-- ====== [修改] 编辑弹窗从3列改为4列，新增值班员编辑 ====== -->
-            <div class="form-row cols-4">
+            <div class="form-row cols-5">
                 <div class="form-group">
                     <label>炉号</label>
                     <select id="editFurnace"><option value="101">101炉</option><option value="102">102炉</option><option value="201">201炉</option><option value="202">202炉</option></select>
@@ -637,6 +653,14 @@
                 <div class="form-group">
                     <label>班次</label>
                     <select id="editShift"><option value="day">白班</option><option value="night">夜班</option></select>
+                </div>
+                <div class="form-group">
+                    <label>班组</label>
+                    <select id="editTeam">
+                        <option value="first">甲班</option>
+                        <option value="second">乙班</option>
+                        <option value="third">丙班</option>
+                    </select>
                 </div>
                 <!-- [新增] 编辑弹窗中的值班员输入框 -->
                 <div class="form-group">
@@ -1131,6 +1155,9 @@ function buildText() {
     // ====== [新增] 值班员字段，生成文本开头输出 ======
     const dutyOfficer = getVal('dutyOfficer');
     if (dutyOfficer) parts.push(`值班员：${dutyOfficer}`);
+    const team = getVal('team');
+    const teamLabel = { first: '甲班', second: '乙班', third: '丙班' }[team] || '';
+    if (teamLabel) parts.push(`班组：${teamLabel}`);
     // 出铁
     const ironCount = getVal('ironCount');
     const southCount = getVal('southCount');
@@ -1264,7 +1291,8 @@ function saveRecord() {
         furnaceNumber: furnace,
         date: date,
         shift: shift,
-        dutyOfficer: getVal('dutyOfficer'),  // [新增] 保存值班员字段
+        team: getVal('team'),
+        dutyOfficer: getVal('dutyOfficer'),
         content: content,
         createdAt: editingId ? (records.find(r => r.id === editingId)?.createdAt || new Date().toISOString()) : new Date().toISOString(),
         updatedAt: new Date().toISOString()
@@ -1325,6 +1353,7 @@ function loadPrevRecord() {
 function fillDemo() {
     // [新增] 示例数据填入炉号和值班员
     document.getElementById('furnaceNumber').value = '101';
+    document.getElementById('team').value = 'first';
     document.getElementById('dutyOfficer').value = '张治顺、陆斌';
     document.getElementById('ironCount').value = '4';
     document.getElementById('southCount').value = '2';
@@ -1337,8 +1366,8 @@ function fillDemo() {
     document.getElementById('northFlow').value = '一般';
     document.getElementById('southCarbon').value = '合适';
     document.getElementById('northCarbon').value = '多';
-    document.getElementById('southSlag').value = '半包';
-    document.getElementById('northSlag').value = '大半包';
+    document.getElementById('southSlag').value = '0.5';
+    document.getElementById('northSlag').value = '1.5';
     document.getElementById('furnaceStatus').value = '正常';
     document.getElementById('currentStatus').value = '稳定';
     document.getElementById('pressureStatus').value = '稳定';
@@ -1377,6 +1406,7 @@ function renderRecords() {
     const dateFrom = document.getElementById('filterDateFrom').value;
     const dateTo = document.getElementById('filterDateTo').value;
     const shift = document.getElementById('filterShift').value;
+    const teamFilter = document.getElementById('filterTeam').value;
     const search = document.getElementById('filterSearch').value.toLowerCase();
     // [新增] 获取值班员筛选关键词
     const dutyFilter = document.getElementById('filterDuty').value.toLowerCase().trim();
@@ -1386,6 +1416,7 @@ function renderRecords() {
         if (dateFrom && r.date < dateFrom) return false;
         if (dateTo && r.date > dateTo) return false;
         if (shift && r.shift !== shift) return false;
+        if (teamFilter && r.team !== teamFilter) return false;
         if (dutyFilter && !(r.dutyOfficer || '').toLowerCase().includes(dutyFilter)) return false;  // [新增] 值班员筛选逻辑
         if (search && !r.content.toLowerCase().includes(search)) return false;
         return true;
@@ -1417,11 +1448,14 @@ function renderRecords() {
         groups[date].forEach(r => {
             const shiftLabel = r.shift === 'day' ? '白班' : '夜班';
             const shiftClass = r.shift === 'day' ? 'day' : 'night';
+            const teamMap = { first: '甲班', second: '乙班', third: '丙班' };
+            const teamLabel = teamMap[r.team] || '';
             html += `
             <div class="record-card">
                 <div class="rc-header">
                     <span class="date-badge">${r.furnaceNumber}炉</span>
                     <span class="shift-tag ${shiftClass}">${shiftLabel}</span>
+                    ${teamLabel ? `<span class="shift-tag" style="background:#eef2ff;color:#4338ca;">${teamLabel}</span>` : ''}
                     ${r.dutyOfficer ? `<span style="font-size:12px;color:var(--text2);">👤 ${escapeHtml(r.dutyOfficer)}</span>` : ''}  <!-- [新增] 卡片头部显示值班员 -->
                     <span style="flex:1"></span>
                     <span style="font-size:11px;color:var(--text3);">${r.content.length}字</span>
@@ -1451,9 +1485,11 @@ function editRecord(id) {
     document.getElementById('editFurnace').value = r.furnaceNumber;
     document.getElementById('editDate').value = r.date;
     document.getElementById('editShift').value = r.shift;
+    document.getElementById('editTeam').value = r.team || 'first';
     document.getElementById('editDuty').value = r.dutyOfficer || '';  // [新增] 编辑时回填值班员
     document.getElementById('editContent').value = r.content;
-    document.getElementById('editModalTitle').textContent = `编辑记录 - ${r.furnaceNumber}炉 ${formatDateDisplay(r.date)} ${r.shift === 'day' ? '白班' : '夜班'}`;
+    const _teamMap = { first: '甲班', second: '乙班', third: '丙班' };
+    document.getElementById('editModalTitle').textContent = `编辑记录 - ${r.furnaceNumber}炉 ${formatDateDisplay(r.date)} ${r.shift === 'day' ? '白班' : '夜班'}${_teamMap[r.team] ? ' ' + _teamMap[r.team] : ''}`;
     document.getElementById('editModal').classList.add('show');
 }
 
@@ -1469,6 +1505,7 @@ function saveEditedRecord() {
     records[idx].furnaceNumber = document.getElementById('editFurnace').value;
     records[idx].date = document.getElementById('editDate').value;
     records[idx].shift = document.getElementById('editShift').value;
+    records[idx].team = document.getElementById('editTeam').value;
     records[idx].dutyOfficer = document.getElementById('editDuty').value.trim();  // [新增] 保存编辑后的值班员
     records[idx].content = document.getElementById('editContent').value;
     records[idx].updatedAt = new Date().toISOString();
@@ -1517,6 +1554,7 @@ function clearFilters() {
     document.getElementById('filterDateFrom').value = '';
     document.getElementById('filterDateTo').value = '';
     document.getElementById('filterShift').value = '';
+    document.getElementById('filterTeam').value = '';
     document.getElementById('filterDuty').value = '';  // [新增] 清除值班员筛选
     document.getElementById('filterSearch').value = '';
     renderRecords();
@@ -1711,6 +1749,7 @@ function importJSON(event) {
                         furnaceNumber: String(r.furnaceNumber),
                         date: r.date,
                         shift: r.shift || 'day',
+                        team: r.team || 'first',
                         content: r.content,
                         createdAt: r.createdAt || new Date().toISOString(),
                         updatedAt: r.updatedAt || new Date().toISOString(),

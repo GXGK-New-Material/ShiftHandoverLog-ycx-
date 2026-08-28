@@ -1,6 +1,10 @@
 
 
 
+
+
+
+
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
@@ -9,7 +13,7 @@
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
-    <title>交接班记录管理系统 v1.6</title>
+    <title>交接班记录管理系统 v1.7</title>
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
     <style>
         :root {
@@ -267,10 +271,14 @@
         @media (max-width: 400px) {
             .form-row.cols-2, .form-row.cols-3, .form-row.cols-4, .form-row.cols-5 { grid-template-columns: 1fr; }
         }
-        /* Quick actions bar */
+        /* Quick actions bar - [修改] 去掉蓝色边框，保留阴影 */
         .quick-bar {
-            display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap;
+            display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: nowrap;
+            padding: 12px 16px; background: var(--card);
+            border-radius: var(--radius); box-shadow: var(--shadow);
+            overflow-x: auto;
         }
+        .quick-bar .btn { flex-shrink: 0; }
         /* Empty state */
         .empty-state {
             text-align: center; padding: 48px 20px; color: var(--text3);
@@ -287,32 +295,275 @@
             opacity: 0; transition: opacity 0.3s; z-index: 50;
         }
         .scroll-top.show { opacity: 1; }
+        /* Home page layout */
+        .home-shell { display: flex; gap: 16px; align-items: flex-start; }
+        .home-nav {
+            display: flex; flex-direction: column; gap: 8px;
+            flex-shrink: 0; width: 132px;
+        }
+        .home-nav-btn {
+            padding: 10px 14px; border: 1.5px solid var(--border); border-radius: 8px;
+            background: var(--card); color: var(--text2); cursor: pointer;
+            font-size: 14px; font-weight: 500; text-align: left;
+            display: flex; align-items: center; gap: 6px; transition: all 0.2s;
+            box-shadow: var(--shadow);
+        }
+        .home-nav-btn:hover { border-color: var(--primary); color: var(--primary); background: var(--primary-light); }
+        .home-nav-btn.active { border-color: var(--primary); color: var(--primary); background: var(--primary-light); font-weight: 600; }
+        .home-nav-btn.home-nav-primary {
+            background: var(--primary); color: white; border-color: var(--primary);
+        }
+        .home-nav-btn.home-nav-primary:hover { background: var(--primary-dark); color: white; }
+        .home-body { flex: 1; min-width: 0; }
+        .home-panel { display: none; }
+        .home-panel.active { display: block; }
+        .main.wide { max-width: 1200px; }
+        .home-toolbar {
+            display: flex; flex-wrap: nowrap; gap: 10px; align-items: center;
+            margin-bottom: 16px; padding: 14px 16px; background: var(--card);
+            border-radius: var(--radius); box-shadow: var(--shadow);
+            border: 2px solid var(--primary);
+        }
+        .home-toolbar .toolbar-left { display: flex; gap: 8px; flex-wrap: nowrap; align-items: center; }
+        .home-toolbar .toolbar-right { margin-left: auto; display: flex; gap: 8px; align-items: center; flex-wrap: nowrap; overflow-x: auto; }
+        .home-toolbar .toolbar-right select,
+        .home-toolbar .toolbar-right input[type="date"] {
+            padding: 7px 10px; border: 1.5px solid var(--border); border-radius: 6px;
+            font-size: 14px; color: var(--text); background: var(--card); outline: none;
+            white-space: nowrap; flex-shrink: 0;
+        }
+        .home-toolbar .toolbar-right select:focus,
+        .home-toolbar .toolbar-right input[type="date"]:focus { border-color: var(--primary); }
+        .home-search {
+            padding: 7px 12px; border: 1.5px solid var(--border); border-radius: 6px;
+            font-size: 14px; width: 220px; outline: none; color: var(--text); background: var(--card);
+            white-space: nowrap; flex-shrink: 0;
+        }
+        .home-search:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(37,99,235,0.1); }
+        .data-table-wrap {
+            background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow);
+            overflow: hidden; margin-bottom: 16px;
+        }
+        .data-table-scroll { overflow-x: auto; }
+        .data-table {
+            width: 100%; border-collapse: collapse; font-size: 13px;
+        }
+        .data-table th {
+            background: #f8fafc; padding: 10px 12px; text-align: left;
+            font-weight: 600; color: var(--text2); border-bottom: 2px solid var(--border);
+            white-space: nowrap;
+        }
+        .data-table td {
+            padding: 10px 12px; border-bottom: 1px solid var(--border);
+            color: var(--text); vertical-align: middle;
+        }
+        .data-table tbody tr { cursor: pointer; transition: background 0.15s; }
+        .data-table tbody tr:hover { background: var(--primary-light); }
+        .data-table tbody tr.selected { background: #eff6ff; }
+        .data-table .col-index { width: 48px; text-align: center; color: var(--text3); }
+        .data-table .col-actions { white-space: nowrap; }
+        .data-table .col-actions .link-btn {
+            background: none; border: none; color: var(--primary); cursor: pointer;
+            font-size: 13px; padding: 2px 6px; font-weight: 500;
+        }
+        .data-table .col-actions .link-btn:hover { text-decoration: underline; }
+        .data-table .col-actions .link-btn.danger { color: var(--red); }
+        .data-table .content-preview {
+            max-width: 400px; color: var(--text2); font-size: 12px;
+            white-space: normal; word-break: break-all; line-height: 1.6;
+        }
+        .home-pagination {
+            display: flex; align-items: center; justify-content: flex-end; gap: 8px;
+            padding: 10px 16px; background: #f8fafc; border-top: 1px solid var(--border);
+            font-size: 13px; color: var(--text2); flex-wrap: wrap;
+        }
+        .home-pagination select, .home-pagination input {
+            padding: 4px 8px; border: 1.5px solid var(--border); border-radius: 4px;
+            font-size: 13px; outline: none;
+        }
+        .home-pagination .page-btn {
+            min-width: 28px; height: 28px; padding: 0 6px; border: 1px solid var(--border);
+            background: white; border-radius: 4px; cursor: pointer; font-size: 13px;
+        }
+        .home-pagination .page-btn:hover { border-color: var(--primary); color: var(--primary); }
+        .home-pagination .page-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
+        .home-pagination .page-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+        .home-detail {
+            background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow);
+            overflow: hidden;
+        }
+        .home-detail-header {
+            padding: 12px 16px; border-bottom: 1px solid var(--border);
+            display: flex; align-items: center; gap: 10px; background: #f8fafc;
+        }
+        .home-detail-header h3 { font-size: 15px; font-weight: 600; flex: 1; }
+        .home-detail-tabs {
+            display: flex; border-bottom: 1px solid var(--border); background: white;
+        }
+        .home-detail-tab {
+            padding: 10px 18px; font-size: 13px; font-weight: 500; color: var(--text2);
+            border: none; background: none; cursor: pointer; position: relative;
+        }
+        .home-detail-tab.active { color: var(--primary); }
+        .home-detail-tab.active::after {
+            content: ''; position: absolute; bottom: 0; left: 16px; right: 16px;
+            height: 2px; background: var(--primary); border-radius: 2px 2px 0 0;
+        }
+        .home-detail-body {
+            padding: 16px; font-size: 14px; line-height: 1.8; min-height: 120px;
+            max-height: 280px; overflow-y: auto; white-space: pre-wrap; word-break: break-all;
+        }
+        .home-detail-body.empty { color: var(--text3); font-style: italic; text-align: center; padding: 40px 16px; }
+        .home-meta-grid {
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 8px 16px; padding: 12px 16px; background: #f8fafc;
+            border-bottom: 1px solid var(--border); font-size: 13px;
+        }
+        .home-meta-item .k { color: var(--text3); font-size: 11px; }
+        .home-meta-item .v { color: var(--text); font-weight: 500; }
+        @media (max-width: 640px) {
+            .home-toolbar { flex-wrap: wrap; }
+            .home-toolbar .toolbar-right { margin-left: 0; width: 100%; flex-wrap: wrap; }
+            .home-search { width: 100%; }
+            .home-shell { flex-direction: column; }
+            .home-nav { flex-direction: row; width: 100%; flex-wrap: wrap; }
+            .home-nav-btn { flex: 1; min-width: 96px; justify-content: center; text-align: center; }
+        }
     </style>
 </head>
 <body>
 
 <!-- Header -->
 <div class="header">
-    <h1>🏭 交接班记录管理系统<span>v1.6</span></h1>
+    <h1>🏭 交接班记录管理系统<span>v1.7</span></h1>
     <div class="header-actions">
         <button class="btn btn-sm" style="background:rgba(255,255,255,0.2);color:white;border:none;" onclick="openSmeltingModal()">🔗 集成冶炼数据</button>
         <div class="furnace-badge" id="headerFurnace">炉号: 101</div>
     </div>
 </div>
 
-<!-- Tabs -->
-<div class="tabs">
-    <button class="tab active" onclick="switchTab('entry')">📝 数据录入</button>
-    <button class="tab" onclick="switchTab('view')">📋 记录查看</button>
-    <button class="tab" onclick="switchTab('manage')">⚙️ 数据管理</button>
+<!-- Main Content -->
+<div class="main wide" id="mainContainer">
+
+<!-- ========== 首页 ========== -->
+<div id="page-home" class="page active">
+    <div class="home-shell">
+        <div class="home-nav">
+            <button class="home-nav-btn home-nav-primary" onclick="goToNewEntry()">➕ 新增</button>
+            <button class="home-nav-btn active" id="homeNavView" onclick="switchHomePanel('view')">📋 数据查看</button>
+            <button class="home-nav-btn" id="homeNavManage" onclick="switchHomePanel('manage')">⚙️ 数据管理</button>
+        </div>
+        <div class="home-body">
+            <!-- 数据查看 -->
+            <div id="homePanelView" class="home-panel active">
+                <div class="home-toolbar">
+                    <div class="toolbar-left">
+                        <button class="btn btn-outline btn-sm" onclick="refreshHomeTable()">🔄 刷新</button>
+                    </div>
+                    <div class="toolbar-right">
+                        <select id="homeFilterFurnace" onchange="homeFilterChanged()">
+                            <option value="">全部炉号</option>
+                            <option value="101">101炉</option>
+                            <option value="102">102炉</option>
+                            <option value="201">201炉</option>
+                            <option value="202">202炉</option>
+                        </select>
+                        <input type="date" id="homeFilterDateFrom" onchange="homeFilterChanged()" title="开始日期">
+                        <span style="color:var(--text3)">至</span>
+                        <input type="date" id="homeFilterDateTo" onchange="homeFilterChanged()" title="结束日期">
+                        <select id="homeFilterShift" onchange="homeFilterChanged()">
+                            <option value="">全部班次</option>
+                            <option value="day">白班</option>
+                            <option value="night">夜班</option>
+                        </select>
+                        <select id="homeFilterTeam" onchange="homeFilterChanged()">
+                            <option value="">全部班组</option>
+                            <option value="first">甲班</option>
+                            <option value="second">乙班</option>
+                            <option value="third">丙班</option>
+                        </select>
+                        <input type="text" class="home-search" id="homeFilterSearch" placeholder="搜索关键词，Enter 确认" onkeydown="if(event.key==='Enter')homeFilterChanged()">
+                    </div>
+                </div>
+
+                <div class="data-table-wrap">
+                    <div class="data-table-scroll">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th class="col-index">序号</th>
+                                    <th>炉号</th>
+                                    <th>日期</th>
+                                    <th>班组</th>
+                                    <th>班次</th>
+                                    <th>值班长</th>
+                                    <th>作业情况摘要</th>
+                                    <th>填报时间</th>
+                                    <th>最后修改</th>
+                                    <th class="col-actions">操作</th>
+                                </tr>
+                            </thead>
+                            <tbody id="homeTableBody"></tbody>
+                        </table>
+                    </div>
+                    <div class="home-pagination" id="homePagination"></div>
+                </div>
+
+                <div class="home-detail" id="homeDetailPanel">
+                    <div class="home-detail-header">
+                        <h3 id="homeDetailTitle">记录详情</h3>
+                        <button class="btn btn-outline btn-sm" id="homeDetailEditBtn" style="display:none;" onclick="editSelectedHomeRecord()">✏️ 编辑</button>
+                        <button class="btn btn-outline btn-sm" id="homeDetailCopyBtn" style="display:none;" onclick="copySelectedHomeRecord()">📋 复制</button>
+                    </div>
+                    <div class="home-meta-grid" id="homeDetailMeta" style="display:none;"></div>
+                    <div class="home-detail-tabs">
+                        <button class="home-detail-tab active">作业情况</button>
+                    </div>
+                    <div class="home-detail-body empty" id="homeDetailContent">请在上方列表中选择一条记录查看详情</div>
+                </div>
+            </div>
+
+            <!-- 数据管理 -->
+            <div id="homePanelManage" class="home-panel">
+                <div class="stat-grid" id="statsGrid"></div>
+
+                <div class="card" style="margin-top:16px;">
+                    <div class="card-header"><span class="section-icon">📤</span><h3>导出 Excel</h3></div>
+                    <div class="card-body">
+                        <p style="font-size:14px; color:var(--text2); margin-bottom:12px;">将当前所有记录导出为 Excel 文件，格式与交班日志模板一致。</p>
+                        <div class="btn-group">
+                            <button class="btn btn-green" onclick="exportExcel()">📊 导出为 Excel</button>
+                            <button class="btn btn-outline" onclick="exportJSON()">💾 备份为 JSON</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header"><span class="section-icon">📥</span><h3>导入数据</h3></div>
+                    <div class="card-body">
+                        <p style="font-size:14px; color:var(--text2); margin-bottom:12px;">支持导入 Excel 交班日志文件（自动识别101炉、102炉sheet）或 JSON 备份文件。</p>
+                        <div class="btn-group">
+                            <label class="btn btn-orange" style="cursor:pointer;">
+                                📂 选择 Excel 文件
+                                <input type="file" accept=".xlsx,.xls" style="display:none;" onchange="importExcel(event)">
+                            </label>
+                            <label class="btn btn-outline" style="cursor:pointer;">
+                                📂 选择 JSON 文件
+                                <input type="file" accept=".json" style="display:none;" onchange="importJSON(event)">
+                            </label>
+                        </div>
+                        <div id="importPreview" style="margin-top:12px;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
-<!-- Main Content -->
-<div class="main">
-
-<!-- ========== 数据录入 ========== -->
-<div id="page-entry" class="page active">
+<!-- ========== 数据录入（仅通过首页「新增」进入） ========== -->
+<div id="page-entry" class="page">
     <div class="quick-bar">
+        <button class="btn btn-primary btn-sm" onclick="goToHome()">⬅️  返回首页</button>
         <button class="btn btn-outline btn-sm" onclick="loadPrevRecord()" title="从上一条记录复制部分数据">📋 沿用上一条</button>
         <button class="btn btn-outline btn-sm" onclick="clearForm()">🗑️ 清空表单</button>
         <button class="btn btn-outline btn-sm" onclick="fillDemo()">📌 填入示例</button>
@@ -604,69 +855,6 @@
             </div>
         </div>
     </div>
-</div>
-
-<!-- ========== 记录查看 ========== -->
-<div id="page-view" class="page">
-    <div class="filter-bar">
-        <label>炉号:</label>
-        <select id="filterFurnace" onchange="renderRecords()">
-            <!-- [修复] 原代码201/202的value误写为"101"，已修正 --><option value="">全部</option><option value="101">101炉</option><option value="102">102炉</option><option value="201">201炉</option><option value="202">202炉</option>
-        </select>
-        <label>日期:</label>
-        <input type="date" id="filterDateFrom" onchange="renderRecords()">
-        <span style="color:var(--text3)">至</span>
-        <input type="date" id="filterDateTo" onchange="renderRecords()">
-        <label>班次:</label>
-        <select id="filterShift" onchange="renderRecords()">
-            <option value="">全部</option><option value="day">白班</option><option value="night">夜班</option>
-        </select>
-         <label>班组:</label>
-        <select id="filterTeam" onchange="renderRecords()">
-            <option value="">全部</option><option value="first">甲班</option><option value="second">乙班</option><option value="third">丙班</option>
-        </select>
-        <!-- [新增] 值班长筛选输入框 -->
-        <label>值班长:</label>
-        <input type="text" id="filterDuty" placeholder="值班长" oninput="renderRecords()" style="width:90px; flex:0 0 auto;">
-        <input type="text" id="filterSearch" placeholder="搜索关键词..." oninput="renderRecords()" style="flex:1; min-width:120px;">
-        <button class="btn btn-outline btn-sm" onclick="clearFilters()">清除筛选</button>
-    </div>
-    <div id="recordsList"></div>
-</div>
-
-<!-- ========== 数据管理 ========== -->
-<div id="page-manage" class="page">
-    <div class="stat-grid" id="statsGrid"></div>
-
-    <div class="card" style="margin-top:16px;">
-        <div class="card-header"><span class="section-icon">📤</span><h3>导出 Excel</h3></div>
-        <div class="card-body">
-            <p style="font-size:14px; color:var(--text2); margin-bottom:12px;">将当前所有记录导出为 Excel 文件，格式与交班日志模板一致。</p>
-            <div class="btn-group">
-                <button class="btn btn-green" onclick="exportExcel()">📊 导出为 Excel</button>
-                <button class="btn btn-outline" onclick="exportJSON()">💾 备份为 JSON</button>
-            </div>
-        </div>
-    </div>
-
-    <div class="card">
-        <div class="card-header"><span class="section-icon">📥</span><h3>导入数据</h3></div>
-        <div class="card-body">
-            <p style="font-size:14px; color:var(--text2); margin-bottom:12px;">支持导入 Excel 交班日志文件（自动识别101炉、102炉sheet）或 JSON 备份文件。</p>
-            <div class="btn-group">
-                <label class="btn btn-orange" style="cursor:pointer;">
-                    📂 选择 Excel 文件
-                    <input type="file" accept=".xlsx,.xls" style="display:none;" onchange="importExcel(event)">
-                </label>
-                <label class="btn btn-outline" style="cursor:pointer;">
-                    📂 选择 JSON 文件
-                    <input type="file" accept=".json" style="display:none;" onchange="importJSON(event)">
-                </label>
-            </div>
-            <div id="importPreview" style="margin-top:12px;"></div>
-        </div>
-    </div>
-
 </div>
 
 </div><!-- end main -->
@@ -1447,15 +1635,270 @@ function loadDraft() {
     }
 }
 
-// ==================== TAB NAVIGATION ====================
-function switchTab(tab) {
-    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+// ==================== PAGE NAVIGATION ====================
+const TEAM_LABELS = { first: '甲班', second: '乙班', third: '丙班' };
+let currentHomePanel = 'view';
+
+function showPage(page) {
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-    document.querySelector(`.tab[onclick="switchTab('${tab}')"]`).classList.add('active');
-    document.getElementById('page-' + tab).classList.add('active');
-    if (tab === 'view') renderRecords();
-    if (tab === 'manage') renderStats();
+    const pageEl = document.getElementById('page-' + page);
+    if (pageEl) pageEl.classList.add('active');
+    const mainEl = document.getElementById('mainContainer');
+    if (mainEl) mainEl.classList.toggle('wide', page === 'home');
+    if (page === 'home') {
+        if (currentHomePanel === 'view') renderHomeTable();
+        else if (currentHomePanel === 'manage') renderStats();
+    }
     window.scrollTo({ top: 0 });
+}
+
+function goToHome() {
+    showPage('home');
+}
+
+function switchHomePanel(panel) {
+    currentHomePanel = panel;
+    document.querySelectorAll('.home-panel').forEach(p => p.classList.remove('active'));
+    document.getElementById(panel === 'view' ? 'homePanelView' : 'homePanelManage').classList.add('active');
+    document.getElementById('homeNavView').classList.toggle('active', panel === 'view');
+    document.getElementById('homeNavManage').classList.toggle('active', panel === 'manage');
+    if (panel === 'view') renderHomeTable();
+    if (panel === 'manage') renderStats();
+    window.scrollTo({ top: 0 });
+}
+
+// ==================== HOME PAGE ====================
+let homePage = 1;
+let homePageSize = 20;
+let homeSelectedId = null;
+
+function goToNewEntry() {
+    editingId = null;
+    clearForm();
+    const dateEl = document.getElementById('recordDate');
+    if (dateEl && !dateEl.value) {
+        dateEl.value = new Date().toISOString().split('T')[0];
+    }
+    showPage('entry');
+}
+
+function getFilterOptions() {
+    return {
+        furnace: document.getElementById('homeFilterFurnace').value,
+        dateFrom: document.getElementById('homeFilterDateFrom').value,
+        dateTo: document.getElementById('homeFilterDateTo').value,
+        shift: document.getElementById('homeFilterShift').value,
+        team: document.getElementById('homeFilterTeam').value,
+        duty: '',
+        search: document.getElementById('homeFilterSearch').value.toLowerCase().trim()
+    };
+}
+
+function applyRecordFilters(opts) {
+    return records.filter(r => {
+        if (opts.furnace && r.furnaceNumber !== opts.furnace) return false;
+        if (opts.dateFrom && r.date < opts.dateFrom) return false;
+        if (opts.dateTo && r.date > opts.dateTo) return false;
+        if (opts.shift && r.shift !== opts.shift) return false;
+        if (opts.team && r.team !== opts.team) return false;
+        if (opts.duty && !(r.dutyOfficer || '').toLowerCase().includes(opts.duty)) return false;
+        if (opts.search) {
+            const hay = [
+                r.furnaceNumber, r.date, r.dutyOfficer || '',
+                TEAM_LABELS[r.team] || '', r.content
+            ].join(' ').toLowerCase();
+            if (!hay.includes(opts.search)) return false;
+        }
+        return true;
+    }).sort((a, b) => {
+        if (a.date !== b.date) return b.date.localeCompare(a.date);
+        if (a.shift !== b.shift) return a.shift === 'day' ? -1 : 1;
+        return (b.updatedAt || '').localeCompare(a.updatedAt || '');
+    });
+}
+
+function formatDateShort(dateStr) {
+    if (!dateStr) return '-';
+    const p = dateStr.split('-');
+    if (p.length !== 3) return dateStr;
+    return `${p[0]}/${p[1]}/${p[2]}`;
+}
+
+function formatDateTime(isoStr) {
+    if (!isoStr) return '-';
+    try {
+        const d = new Date(isoStr);
+        if (isNaN(d.getTime())) return '-';
+        const pad = n => String(n).padStart(2, '0');
+        return `${d.getFullYear()}/${pad(d.getMonth()+1)}/${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
+    } catch(e) { return '-'; }
+}
+
+function truncateText(str, max) {
+    if (!str) return '';
+    const s = String(str);
+    return s.length <= max ? s : s.slice(0, max) + '…';
+}
+
+function homeFilterChanged() {
+    homePage = 1;
+    renderHomeTable();
+}
+
+function refreshHomeTable() {
+    loadRecords();
+    renderHomeTable();
+    showToast('列表已刷新', 'success');
+}
+
+function renderHomeTable() {
+    const tbody = document.getElementById('homeTableBody');
+    const paginationEl = document.getElementById('homePagination');
+    if (!tbody) return;
+
+    const filtered = applyRecordFilters(getFilterOptions());
+    const total = filtered.length;
+    const totalPages = Math.max(1, Math.ceil(total / homePageSize));
+    if (homePage > totalPages) homePage = totalPages;
+    if (homePage < 1) homePage = 1;
+
+    const start = (homePage - 1) * homePageSize;
+    const pageRows = filtered.slice(start, start + homePageSize);
+
+    if (total === 0) {
+        tbody.innerHTML = `<tr><td colspan="10" style="text-align:center;padding:40px;color:var(--text3);">暂无记录，点击「新增」开始录入</td></tr>`;
+        paginationEl.innerHTML = `<span>共 0 条</span>`;
+        if (homeSelectedId) selectHomeRecord(null);
+        return;
+    }
+
+    let html = '';
+    pageRows.forEach((r, i) => {
+        const idx = start + i + 1;
+        const shiftLabel = r.shift === 'day' ? '白班' : '夜班';
+        const teamLabel = TEAM_LABELS[r.team] || '-';
+        const selected = r.id === homeSelectedId ? ' selected' : '';
+        html += `<tr class="${selected.trim()}" data-id="${r.id}" onclick="selectHomeRecord('${r.id}')">
+            <td class="col-index">${idx}</td>
+            <td>${escapeHtml(r.furnaceNumber)}炉</td>
+            <td>${formatDateShort(r.date)}</td>
+            <td>${escapeHtml(teamLabel)}</td>
+            <td>${shiftLabel}</td>
+            <td>${escapeHtml(r.dutyOfficer || '-')}</td>
+            <td><div class="content-preview">${escapeHtml(truncateText(r.content, 10))}</div></td>
+            <td style="font-size:12px;color:var(--text2);white-space:nowrap;">${formatDateTime(r.createdAt)}</td>
+            <td style="font-size:12px;color:var(--text2);white-space:nowrap;">${formatDateTime(r.updatedAt)}</td>
+            <td class="col-actions" onclick="event.stopPropagation()">
+                <button class="link-btn" onclick="viewHomeRecord('${r.id}')">查看</button>
+                <button class="link-btn" onclick="editRecord('${r.id}')">编辑</button>
+                <button class="link-btn danger" onclick="deleteRecord('${r.id}')">删除</button>
+            </td>
+        </tr>`;
+    });
+    tbody.innerHTML = html;
+
+    // Pagination
+    let pagHtml = `<span>共 ${total} 条</span>`;
+    pagHtml += `<button class="page-btn" onclick="homeGoPage(${homePage - 1})" ${homePage <= 1 ? 'disabled' : ''}>&lt;</button>`;
+    const maxBtns = 5;
+    let pStart = Math.max(1, homePage - Math.floor(maxBtns / 2));
+    let pEnd = Math.min(totalPages, pStart + maxBtns - 1);
+    if (pEnd - pStart < maxBtns - 1) pStart = Math.max(1, pEnd - maxBtns + 1);
+    for (let p = pStart; p <= pEnd; p++) {
+        pagHtml += `<button class="page-btn${p === homePage ? ' active' : ''}" onclick="homeGoPage(${p})">${p}</button>`;
+    }
+    pagHtml += `<button class="page-btn" onclick="homeGoPage(${homePage + 1})" ${homePage >= totalPages ? 'disabled' : ''}>&gt;</button>`;
+    pagHtml += `<select onchange="homeChangePageSize(this.value)">
+        <option value="10"${homePageSize===10?' selected':''}>10条/页</option>
+        <option value="20"${homePageSize===20?' selected':''}>20条/页</option>
+        <option value="30"${homePageSize===30?' selected':''}>30条/页</option>
+        <option value="50"${homePageSize===50?' selected':''}>50条/页</option>
+    </select>`;
+    paginationEl.innerHTML = pagHtml;
+
+    if (homeSelectedId && !filtered.find(r => r.id === homeSelectedId)) {
+        selectHomeRecord(null);
+    } else if (homeSelectedId) {
+        renderHomeDetail(homeSelectedId);
+    }
+}
+
+function homeGoPage(p) {
+    const filtered = applyRecordFilters(getFilterOptions());
+    const totalPages = Math.max(1, Math.ceil(filtered.length / homePageSize));
+    if (p < 1 || p > totalPages) return;
+    homePage = p;
+    renderHomeTable();
+}
+
+function homeChangePageSize(size) {
+    homePageSize = parseInt(size, 10) || 20;
+    homePage = 1;
+    renderHomeTable();
+}
+
+function selectHomeRecord(id) {
+    homeSelectedId = id || null;
+    document.querySelectorAll('#homeTableBody tr').forEach(tr => {
+        tr.classList.toggle('selected', tr.dataset.id === id);
+    });
+    renderHomeDetail(id);
+}
+
+function viewHomeRecord(id) {
+    selectHomeRecord(id);
+    const panel = document.getElementById('homeDetailPanel');
+    if (panel) panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+function renderHomeDetail(id) {
+    const titleEl = document.getElementById('homeDetailTitle');
+    const metaEl = document.getElementById('homeDetailMeta');
+    const contentEl = document.getElementById('homeDetailContent');
+    const editBtn = document.getElementById('homeDetailEditBtn');
+    const copyBtn = document.getElementById('homeDetailCopyBtn');
+
+    if (!id) {
+        titleEl.textContent = '记录详情';
+        metaEl.style.display = 'none';
+        contentEl.textContent = '请在上方列表中选择一条记录查看详情';
+        contentEl.classList.add('empty');
+        editBtn.style.display = 'none';
+        copyBtn.style.display = 'none';
+        return;
+    }
+
+    const r = records.find(x => x.id === id);
+    if (!r) {
+        selectHomeRecord(null);
+        return;
+    }
+
+    const shiftLabel = r.shift === 'day' ? '白班' : '夜班';
+    const teamLabel = TEAM_LABELS[r.team] || '-';
+    titleEl.textContent = `${r.furnaceNumber}炉 · ${formatDateShort(r.date)} · ${shiftLabel} · ${teamLabel}`;
+    metaEl.style.display = 'grid';
+    metaEl.innerHTML = `
+        <div class="home-meta-item"><div class="k">炉号</div><div class="v">${escapeHtml(r.furnaceNumber)}炉</div></div>
+        <div class="home-meta-item"><div class="k">日期</div><div class="v">${formatDateShort(r.date)}</div></div>
+        <div class="home-meta-item"><div class="k">班次</div><div class="v">${shiftLabel}</div></div>
+        <div class="home-meta-item"><div class="k">班组</div><div class="v">${escapeHtml(teamLabel)}</div></div>
+        <div class="home-meta-item"><div class="k">值班长</div><div class="v">${escapeHtml(r.dutyOfficer || '-')}</div></div>
+        <div class="home-meta-item"><div class="k">字数</div><div class="v">${r.content.length} 字</div></div>
+    `;
+    contentEl.textContent = r.content;
+    contentEl.classList.remove('empty');
+    editBtn.style.display = 'inline-flex';
+    copyBtn.style.display = 'inline-flex';
+}
+
+function editSelectedHomeRecord() {
+    if (homeSelectedId) editRecord(homeSelectedId);
+}
+
+function copySelectedHomeRecord() {
+    if (!homeSelectedId) return;
+    copyRecordContent(homeSelectedId);
 }
 
 // ==================== FORM -> TEXT GENERATION ====================
@@ -1629,6 +2072,8 @@ function saveRecord() {
     saveRecords();
     showToast('记录已保存', 'success');
     clearForm();
+    renderHomeTable();
+    if (currentHomePanel === 'manage') renderStats();
 }
 
 function saveAndNew() {
@@ -1721,79 +2166,7 @@ function updateHeaderFurnace() {
     document.getElementById('headerFurnace').textContent = '炉号: ' + v;
 }
 
-// ==================== RECORD VIEW ====================
-function renderRecords() {
-    const furnace = document.getElementById('filterFurnace').value;
-    const dateFrom = document.getElementById('filterDateFrom').value;
-    const dateTo = document.getElementById('filterDateTo').value;
-    const shift = document.getElementById('filterShift').value;
-    const teamFilter = document.getElementById('filterTeam').value;
-    const search = document.getElementById('filterSearch').value.toLowerCase();
-    // [新增] 获取值班长筛选关键词
-    const dutyFilter = document.getElementById('filterDuty').value.toLowerCase().trim();
-
-    let filtered = records.filter(r => {
-        if (furnace && r.furnaceNumber !== furnace) return false;
-        if (dateFrom && r.date < dateFrom) return false;
-        if (dateTo && r.date > dateTo) return false;
-        if (shift && r.shift !== shift) return false;
-        if (teamFilter && r.team !== teamFilter) return false;
-        if (dutyFilter && !(r.dutyOfficer || '').toLowerCase().includes(dutyFilter)) return false;  // [新增] 值班长筛选逻辑
-        if (search && !r.content.toLowerCase().includes(search)) return false;
-        return true;
-    });
-
-    // Sort by date desc, then shift (day first)
-    filtered.sort((a, b) => {
-        if (a.date !== b.date) return b.date.localeCompare(a.date);
-        return a.shift === 'day' ? -1 : 1;
-    });
-
-    const container = document.getElementById('recordsList');
-    if (filtered.length === 0) {
-        container.innerHTML = `<div class="empty-state"><div class="icon">📭</div><p>暂无匹配的记录</p></div>`;
-        return;
-    }
-
-    // Group by date
-    const groups = {};
-    filtered.forEach(r => {
-        const key = r.date;
-        if (!groups[key]) groups[key] = [];
-        groups[key].push(r);
-    });
-
-    let html = '';
-    Object.keys(groups).sort().reverse().forEach(date => {
-        html += `<div style="margin-bottom:8px;"><div style="font-size:14px;font-weight:700;color:var(--primary);padding:8px 4px;">📅 ${formatDateDisplay(date)}</div>`;
-        groups[date].forEach(r => {
-            const shiftLabel = r.shift === 'day' ? '白班' : '夜班';
-            const shiftClass = r.shift === 'day' ? 'day' : 'night';
-            const teamMap = { first: '甲班', second: '乙班', third: '丙班' };
-            const teamLabel = teamMap[r.team] || '';
-            html += `
-            <div class="record-card">
-                <div class="rc-header">
-                    <span class="date-badge">${r.furnaceNumber}炉</span>
-                    <span class="shift-tag ${shiftClass}">${shiftLabel}</span>
-                    ${teamLabel ? `<span class="shift-tag" style="background:#eef2ff;color:#4338ca;">${teamLabel}</span>` : ''}
-                    ${r.dutyOfficer ? `<span style="font-size:12px;color:var(--text2);">👤 ${escapeHtml(r.dutyOfficer)}</span>` : ''}  <!-- [新增] 卡片头部显示值班长 -->
-                    <span style="flex:1"></span>
-                    <span style="font-size:11px;color:var(--text3);">${r.content.length}字</span>
-                </div>
-                <div class="rc-body">${escapeHtml(r.content)}</div>
-                <div class="rc-actions">
-                    <button class="btn btn-outline btn-sm" onclick="copyRecordContent('${r.id}')">📋 复制</button>
-                    <button class="btn btn-outline btn-sm" onclick="editRecord('${r.id}')">✏️ 编辑</button>
-                    <button class="btn btn-outline btn-sm" style="color:var(--red);" onclick="deleteRecord('${r.id}')">🗑️ 删除</button>
-                </div>
-            </div>`;
-        });
-        html += `</div>`;
-    });
-    container.innerHTML = html;
-}
-
+// ==================== RECORD ACTIONS ====================
 function copyRecordContent(id) {
     const r = records.find(x => x.id === id);
     if (r) navigator.clipboard.writeText(r.content).then(() => showToast('已复制', 'success'));
@@ -1832,7 +2205,8 @@ function saveEditedRecord() {
     records[idx].updatedAt = new Date().toISOString();
     saveRecords();
     closeEditModal();
-    renderRecords();
+    renderHomeTable();
+    if (currentHomePanel === 'manage') renderStats();
     showToast('修改已保存', 'success');
 }
 
@@ -1866,19 +2240,10 @@ function confirmDeleteWithPassword() {
     if (!id) return;
     records = records.filter(r => r.id !== id);
     saveRecords();
-    renderRecords();
+    if (homeSelectedId === id) homeSelectedId = null;
+    renderHomeTable();
+    if (currentHomePanel === 'manage') renderStats();
     showToast('已删除', 'success');
-}
-
-function clearFilters() {
-    document.getElementById('filterFurnace').value = '';
-    document.getElementById('filterDateFrom').value = '';
-    document.getElementById('filterDateTo').value = '';
-    document.getElementById('filterShift').value = '';
-    document.getElementById('filterTeam').value = '';
-    document.getElementById('filterDuty').value = '';  // [新增] 清除值班长筛选
-    document.getElementById('filterSearch').value = '';
-    renderRecords();
 }
 
 // ==================== DATA MANAGEMENT ====================
@@ -2045,6 +2410,7 @@ function importExcel(event) {
             document.getElementById('importPreview').innerHTML = `<p style="color:var(--green);font-weight:600;">✅ 成功导入 ${imported} 条记录</p>${previewHtml}`;
             showToast(`成功导入 ${imported} 条记录`, 'success');
             renderStats();
+            renderHomeTable();
         } catch(err) {
             document.getElementById('importPreview').innerHTML = `<p style="color:var(--red);">❌ 导入失败: ${err.message}</p>`;
             showToast('导入失败', 'error');
@@ -2071,6 +2437,7 @@ function importJSON(event) {
                         date: r.date,
                         shift: r.shift || 'day',
                         team: r.team || 'first',
+                        dutyOfficer: r.dutyOfficer || '',
                         content: r.content,
                         createdAt: r.createdAt || new Date().toISOString(),
                         updatedAt: r.updatedAt || new Date().toISOString(),
@@ -2083,6 +2450,7 @@ function importJSON(event) {
             document.getElementById('importPreview').innerHTML = `<p style="color:var(--green);font-weight:600;">✅ 成功导入 ${count} 条记录</p>`;
             showToast(`成功导入 ${count} 条记录`, 'success');
             renderStats();
+            renderHomeTable();
         } catch(err) {
             document.getElementById('importPreview').innerHTML = `<p style="color:var(--red);">❌ 导入失败: ${err.message}</p>`;
             showToast('导入失败', 'error');
@@ -2233,7 +2601,7 @@ function applySmeltingToForm(rid) {
     saveDraft();
     showToast('已填充冶炼数据到表单', 'success');
     closeSmeltingModal();
-    switchTab('entry');
+    showPage('entry');
 }
 
 // ==================== INITIALIZATION ====================
@@ -2267,6 +2635,7 @@ function init() {
     }
 
     renderStats();
+    renderHomeTable();
 }
 
 init();

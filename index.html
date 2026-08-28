@@ -2,6 +2,7 @@
 
 
 
+
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
@@ -10,7 +11,7 @@
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
-    <title>交接班记录管理系统 v1.8</title>
+    <title>交接班记录管理系统 v1.9</title>
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
     <style>
         :root {
@@ -432,7 +433,7 @@
 
 <!-- Header -->
 <div class="header">
-    <h1>🏭 交接班记录管理系统<span>v1.7</span></h1>
+    <h1>🏭 交接班记录管理系统<span>v1.9</span></h1>
     <div class="header-actions">
         <button class="btn btn-sm" style="background:rgba(255,255,255,0.2);color:white;border:none;" onclick="openSmeltingModal()">🔗 集成冶炼数据</button>
         <div class="furnace-badge" id="headerFurnace">炉号: 101</div>
@@ -560,7 +561,7 @@
 <!-- ========== 数据录入（仅通过首页「新增」进入） ========== -->
 <div id="page-entry" class="page">
     <div class="quick-bar">
-        <button class="btn btn-primary btn-sm" onclick="goToHome()">返回首页</button>
+        <button class="btn btn-primary btn-sm" onclick="goToHome()"> ⬅️ 返回首页</button>
         <button class="btn btn-outline btn-sm" onclick="loadPrevRecord()" title="从上一条记录复制部分数据">📋 沿用上一条</button>
         <button class="btn btn-outline btn-sm" onclick="clearForm()">🗑️ 清空表单</button>
         <button class="btn btn-outline btn-sm" onclick="fillDemo()">📌 填入示例</button>
@@ -756,6 +757,18 @@
                     <select id="collapse"><option value="">-</option><option>无</option><option>偶尔</option><option>频繁</option></select>
                 </div>
             </div>
+            <div class="form-row cols-3">
+                <div class="form-group">
+                    <label>三相电极实际压放量(mm)</label>
+                    <input type="number" id="pressA" placeholder="A相" min="0">
+                </div>
+                <div class="form-group">
+                    <input type="number" id="pressB" placeholder="B相" min="0" style="margin-top:18px;">
+                </div>
+                <div class="form-group">
+                    <input type="number" id="pressC" placeholder="C相" min="0" style="margin-top:18px;">
+                </div>
+            </div>
         </div>
     </div>
 
@@ -767,7 +780,7 @@
                 <div class="form-group">
                     <label>电极位置<span class="req">*</span></label>
                     <select id="electrodePos"><option value="">-</option><option>正常</option><option value="__custom__">自定义</option></select>
-                    <input type="text" id="electrodePosCustom" placeholder="请输入..." style="display:none; margin-top:4px;">
+                    <textarea id="electrodePosCustom" rows="2" placeholder="请输入..." style="display:none; margin-top:4px; width:100%; resize:vertical; font-family:inherit; font-size:14px; line-height:1.6;"></textarea>
                 </div>
             </div>
             <div class="sub-title">系统状态</div>
@@ -775,29 +788,29 @@
                 <div class="form-group">
                     <label>炉内温度<span class="req">*</span></label>
                     <select id="tempSystem"><option value="">-</option><option>正常</option><option value="__custom__">自定义</option></select>
-                    <input type="text" id="tempSystemCustom" placeholder="请输入..." style="display:none; margin-top:4px;">
+                    <textarea id="tempSystemCustom" rows="2" placeholder="请输入..." style="display:none; margin-top:4px; width:100%; resize:vertical; font-family:inherit; font-size:14px; line-height:1.6;"></textarea>
                 </div>
                 <div class="form-group">
                     <label>电极压放<span class="req">*</span></label>
                     <select id="electrodePress"><option value="">-</option><option>正常</option><option value="__custom__">自定义</option></select>
-                    <input type="text" id="electrodePressCustom" placeholder="请输入..." style="display:none; margin-top:4px;">
+                    <textarea id="electrodePressCustom" rows="2" placeholder="请输入..." style="display:none; margin-top:4px; width:100%; resize:vertical; font-family:inherit; font-size:14px; line-height:1.6;"></textarea>
                 </div>
             </div>
             <div class="form-row cols-3">
                 <div class="form-group">
                     <label>液压系统<span class="req">*</span></label>
                     <select id="hydraulic"><option value="">-</option><option>正常</option><option value="__custom__">自定义</option></select>
-                    <input type="text" id="hydraulicCustom" placeholder="请输入..." style="display:none; margin-top:4px;">
+                    <textarea id="hydraulicCustom" rows="2" placeholder="请输入..." style="display:none; margin-top:4px; width:100%; resize:vertical; font-family:inherit; font-size:14px; line-height:1.6;"></textarea>
                 </div>
                 <div class="form-group">
                     <label>水冷系统<span class="req">*</span></label>
                     <select id="waterCool"><option value="">-</option><option>正常</option><option value="__custom__">自定义</option></select>
-                    <input type="text" id="waterCoolCustom" placeholder="请输入..." style="display:none; margin-top:4px;">
+                    <textarea id="waterCoolCustom" rows="2" placeholder="请输入..." style="display:none; margin-top:4px; width:100%; resize:vertical; font-family:inherit; font-size:14px; line-height:1.6;"></textarea>
                 </div>
                 <div class="form-group">
                     <label>机电设备运转<span class="req">*</span></label>
                     <select id="mechanical"><option value="">-</option><option>正常</option><option value="__custom__">自定义</option></select>
-                    <input type="text" id="mechanicalCustom" placeholder="请输入..." style="display:none; margin-top:4px;">
+                    <textarea id="mechanicalCustom" rows="2" placeholder="请输入..." style="display:none; margin-top:4px; width:100%; resize:vertical; font-family:inherit; font-size:14px; line-height:1.6;"></textarea>
                 </div>
             </div>
         </div>
@@ -1551,11 +1564,70 @@ const DRAFT_KEY = 'shift_log_draft';
 let records = [];
 let editingId = null;
 
+function reformatLegacyContent(content) {
+    if (!content) return content;
+    if (/\n\s*\n/.test(content)) return content; // already new block format
+    const segs = content.split('，').map(s => s.trim()).filter(Boolean);
+    if (segs.length <= 1) return content;
+    const sysKeys = ['电极位置：', '炉内温度：', '电极压放：', '液压系统：', '水冷系统：', '机电设备运转：'];
+    const isStatus = s => /^炉况/.test(s) || /^电流/.test(s) || /^炉压/.test(s) || /冲火$/.test(s) || /塌料$/.test(s) || s.startsWith('三相电极实际压放量');
+    const isSide = s => /^南面/.test(s) || /^北面/.test(s);
+    const out = [];
+    const head = [];
+    let matChange = '', abnormal = '';
+    const notes = [];
+    let i = 0;
+    while (i < segs.length) {
+        const seg = segs[i];
+        if (seg.startsWith('值班长：') || seg.startsWith('班组：')) { head.push(seg); i++; continue; }
+        if (seg.startsWith('本班出铁')) {
+            let line = seg;
+            while (i+1 < segs.length && /^\d+南$|^\d+北$/.test(segs[i+1])) { line += '，' + segs[i+1]; i++; }
+            out.push(line + '，'); i++; continue;
+        }
+        if (/^南面/.test(seg) || /^北面/.test(seg)) {
+            const side = /^南面/.test(seg) ? '南面' : '北面';
+            const arr = [seg]; i++;
+            while (i < segs.length && segs[i].startsWith(side)) { arr.push(segs[i]); i++; }
+            out.push(arr.join('，') + '；'); continue;
+        }
+        if (isStatus(seg)) {
+            const arr = [seg]; i++;
+            while (i < segs.length && isStatus(segs[i])) { arr.push(segs[i]); i++; }
+            out.push(arr.join('，')); continue;
+        }
+        if (sysKeys.some(k => seg.startsWith(k))) {
+            const arr = [seg]; i++;
+            while (i < segs.length && sysKeys.some(k => segs[i].startsWith(k))) { arr.push(segs[i]); i++; }
+            out.push(arr.join('  ')); continue;
+        }
+        if (seg.startsWith('本班变料情况：')) { matChange = seg; i++; continue; }
+        if (seg.startsWith('异常情况重点交班：')) { abnormal = seg; i++; continue; }
+        notes.push(seg); i++;
+    }
+    const res = [];
+    if (head.length) res.push(head.join('  '));
+    for (const b of out) res.push(b);
+    if (matChange) res.push(matChange);
+    if (abnormal) res.push(abnormal);
+    if (notes.length) res.push(notes.join('，'));
+    return res.join('\r\n\r\n');
+}
+
 function loadRecords() {
     try {
         const data = localStorage.getItem(STORAGE_KEY);
         records = data ? JSON.parse(data) : [];
     } catch(e) { records = []; }
+    let migrated = 0;
+    records = records.map(r => {
+        if (r && r.content && !/\n\s*\n/.test(r.content) && r.content.indexOf('，') >= 0) {
+            const nc = reformatLegacyContent(r.content);
+            if (nc && nc !== r.content) { migrated++; return Object.assign({}, r, { content: nc, updatedAt: new Date().toISOString() }); }
+        }
+        return r;
+    });
+    if (migrated > 0) { saveRecords(); }
 }
 function saveRecords() {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(records));
@@ -1767,7 +1839,7 @@ function renderHomeTable() {
             <td>${escapeHtml(teamLabel)}</td>
             <td>${shiftLabel}</td>
             <td>${escapeHtml(r.dutyOfficer || '-')}</td>
-            <td><div class="content-preview">${escapeHtml(truncateText(r.content, 10))}</div></td>
+            <td><div class="content-preview">${escapeHtml(truncateText((r.content||"").split("\n").find(l=>l.trim())||"",10))}</div></td>
             <td style="font-size:12px;color:var(--text2);white-space:nowrap;">${formatDateTime(r.createdAt)}</td>
             <td style="font-size:12px;color:var(--text2);white-space:nowrap;">${formatDateTime(r.updatedAt)}</td>
             <td class="col-actions" onclick="event.stopPropagation()">
@@ -1897,100 +1969,91 @@ function getSystemField(selectId, customId) {
     return sel.value;
 }
 function buildText() {
-    const parts = [];
-    // ====== [新增] 值班长字段，生成文本开头输出 ======
-    const dutyOfficer = getVal('dutyOfficer');
-    if (dutyOfficer) parts.push(`值班长：${dutyOfficer}`);
-    const team = getVal('team');
-    const teamLabel = { first: '甲班', second: '乙班', third: '丙班' }[team] || '';
-    if (teamLabel) parts.push(`班组：${teamLabel}`);
-    // 出铁
-    const ironCount = getVal('ironCount');
-    const southCount = getVal('southCount');
-    const northCount = getVal('northCount');
+    const blocks = [];
+    const get = id => { const el = document.getElementById(id); return el ? (el.value || '').trim() : ''; };
+    const getSys = id => {
+        const sel = document.getElementById(id); if (!sel) return '';
+        if (sel.value === '__custom__') {
+            const c = document.getElementById(id + 'Custom');
+            return c ? (c.value || '').trim() : '';
+        }
+        return (sel.value || '').trim();
+    };
+    const teamLabel = { first: '甲班', second: '乙班', third: '丙班' }[get('team')] || '';
+
+    const head = [];
+    const duty = get('dutyOfficer');
+    if (duty) head.push(`值班长：${duty}`);
+    if (teamLabel) head.push(`班组：${teamLabel}`);
+    if (head.length) blocks.push(head.join('  '));
+
+    const ironCount = get('ironCount');
+    const southCount = get('southCount');
+    const northCount = get('northCount');
     if (ironCount) {
         let s = `本班出铁${ironCount}炉`;
-        if (southCount !== '' && northCount !== '') s += `，${southCount}南${northCount}北`;
-        else if (southCount !== '') s += `，${southCount}南`;
-        else if (northCount !== '') s += `，${northCount}北`;
-        parts.push(s);
+        if (southCount) s += `，${southCount}南`;
+        if (northCount) s += `，${northCount}北`;
+        s += '，';
+        blocks.push(s);
     }
-    // 铁口操作
-    const sTap = getVal('southTapOp'), nTap = getVal('northTapOp');
-    if (sTap) parts.push(`南面铁口${sTap}`);
-    if (nTap) parts.push(`北面铁口${nTap}`);
-    const sDepth = getVal('southDepth'), nDepth = getVal('northDepth');
-    if (sDepth) parts.push(`南面深度${sDepth}mm`);
-    if (nDepth) parts.push(`北面深度${nDepth}mm`);
 
-    // 南面情况
-    const sFluid = getVal('southFluidity');
-    if (sFluid) parts.push(`南面渣铁流动性${sFluid}`);
-    const sFlow = getVal('southFlow');
-    if (sFlow) parts.push(`南面流量${sFlow}`);
-    const sBlock = getVal('southBlock');
-    if (sBlock && sBlock !== '无') parts.push(`南面铁口${sBlock}卡堵`);
-    const sPull = getVal('southPull');
-    if (sPull) parts.push(`南面${sPull}通拉`);
-    const sOxy = getVal('southOxygen');
-    if (sOxy && sOxy !== '0') parts.push(`南面吹氧${sOxy}瓶`);
-    const sCarb = getVal('southCarbon');
-    if (sCarb) parts.push(`南面排碳${sCarb}`);
-    const sSlag = getVal('southSlag');
-    if (sSlag) parts.push(`南面渣量${sSlag}包`);
+    function buildSide(prefix, label) {
+        const tapOp = get(prefix + 'TapOp');
+        const depth = get(prefix + 'Depth');
+        const fluid = get(prefix + 'Fluidity');
+        const flow = get(prefix + 'Flow');
+        const block = get(prefix + 'Block');
+        const pull = get(prefix + 'Pull');
+        const oxy = get(prefix + 'Oxygen');
+        const carbon = get(prefix + 'Carbon');
+        const slag = get(prefix + 'Slag');
+        const segs = [];
+        if (tapOp) segs.push(`${label}铁口${tapOp}开`);
+        if (depth) segs.push(`深度${depth}mm`);
+        if (fluid) segs.push(`炉温（流动性）${fluid}`);
+        if (flow) segs.push(`流量${flow}`);
+        if (block) segs.push(`铁口${block}卡堵`);
+        if (pull) segs.push(`${pull}通拉`);
+        if (oxy) segs.push(`吹氧${oxy}瓶`);
+        if (carbon) segs.push(`排碳${carbon}`);
+        if (slag) segs.push(`渣量${slag}包`);
+        if (segs.length) blocks.push(segs.join('，') + '；');
+    }
+    buildSide('south', '南面');
+    buildSide('north', '北面');
 
-    // 北面情况
-    const nFluid = getVal('northFluidity');
-    if (nFluid) parts.push(`北面渣铁流动性${nFluid}`);
-    const nFlow = getVal('northFlow');
-    if (nFlow) parts.push(`北面流量${nFlow}`);
-    const nBlock = getVal('northBlock');
-    if (nBlock && nBlock !== '无') parts.push(`北面铁口${nBlock}卡堵`);
-    const nPull = getVal('northPull');
-    if (nPull) parts.push(`北面${nPull}通拉`);
-    const nOxy = getVal('northOxygen');
-    if (nOxy && nOxy !== '0') parts.push(`北面吹氧${nOxy}瓶`);
-    const nCarb = getVal('northCarbon');
-    if (nCarb) parts.push(`北面排碳${nCarb}`);
-    const nSlag = getVal('northSlag');
-    if (nSlag) parts.push(`北面渣量${nSlag}包`);
+    const fStatus = get('furnaceStatus');
+    const cStatus = get('currentStatus');
+    const pStatus = get('pressureStatus');
+    const blowout = get('blowout');
+    const collapse = get('collapse');
+    const pA = get('pressA'), pB = get('pressB'), pC = get('pressC');
+    const segs3 = [];
+    if (fStatus) segs3.push(`炉况${fStatus}`);
+    if (cStatus) segs3.push(`电流${cStatus}`);
+    if (pStatus) segs3.push(`炉压${pStatus}`);
+    if (blowout) segs3.push(`${blowout}冲火`);
+    if (collapse) segs3.push(`${collapse}塌料`);
+    if (pA || pB || pC) segs3.push(`三相电极实际压放量：A（${pA}），B（${pB}），C（${pC}）。`);
+    if (segs3.length) blocks.push(segs3.join('，'));
 
-    // 炉况与电流
-    const fStatus = getVal('furnaceStatus');
-    if (fStatus) parts.push(`炉况${fStatus}`);
-    const cStatus = getVal('currentStatus');
-    if (cStatus) parts.push(`电流${cStatus}`);
-    const pStatus = getVal('pressureStatus');
-    if (pStatus) parts.push(`炉压${pStatus}`);
-    const blowout = getVal('blowout');
-    if (blowout && blowout !== '无') parts.push(`${blowout}冲火`);
-    const collapse = getVal('collapse');
-    if (collapse && collapse !== '无') parts.push(`${collapse}塌料`);
+    const sysItems = [];
+    sysItems.push('电极位置：' + getSys('electrodePos'));
+    sysItems.push('炉内温度：' + getSys('tempSystem'));
+    sysItems.push('电极压放：' + getSys('electrodePress'));
+    sysItems.push('液压系统：' + getSys('hydraulic'));
+    sysItems.push('水冷系统：' + getSys('waterCool'));
+    sysItems.push('机电设备运转：' + getSys('mechanical'));
+    blocks.push(sysItems.join('  '));
 
-    const ePos = getSystemField('electrodePos', 'electrodePosCustom');
-    if (ePos) parts.push(`电极位置：${ePos}`);
+    blocks.push('本班变料情况：' + get('materialChange'));
+    blocks.push('异常情况重点交班：' + get('abnormal'));
 
-    // 系统
-    const temp = getSystemField('tempSystem', 'tempSystemCustom');
-    if (temp) parts.push(`炉内温度：${temp}`);
-    const ePress = getSystemField('electrodePress', 'electrodePressCustom');
-    if (ePress) parts.push(`电极压放：${ePress}`);
-    const hydro = getSystemField('hydraulic', 'hydraulicCustom');
-    if (hydro) parts.push(`液压系统：${hydro}`);
-    const water = getSystemField('waterCool', 'waterCoolCustom');
-    if (water) parts.push(`水冷系统：${water}`);
-    const mech = getSystemField('mechanical', 'mechanicalCustom');
-    if (mech) parts.push(`机电设备运转：${mech}`);
+    const notes = get('additionalNotes');
+    if (notes) blocks.push(notes);
 
-    // 其他
-    const matChange = getVal('materialChange');
-    if (matChange) parts.push(`本班变料情况：${matChange}`);
-    const abnormal = getVal('abnormal');
-    if (abnormal) parts.push(`异常情况重点交班：${abnormal}`);
-    const notes = getVal('additionalNotes');
-    if (notes) parts.push(notes);
-
-    return parts.join('，').replace(/，，/g, '，');
+    return blocks.join('\n\n');
 }
 
 function updatePreview() {
@@ -2145,7 +2208,7 @@ function clearForm() {
         if (el.tagName === 'SELECT') el.selectedIndex = 0;
         else el.value = '';
     });
-    document.querySelectorAll('#page-entry input[type="text"][id$="Custom"]').forEach(el => el.style.display = 'none');
+    document.querySelectorAll('#page-entry input[type="text"][id$="Custom"], #page-entry textarea[id$="Custom"]').forEach(el => el.style.display = 'none');
     editingId = null;
     clearDraft();
     updatePreview();

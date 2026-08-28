@@ -1,18 +1,19 @@
-
-
-
-
-
 <!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-    <meta charset="UTF-8">
+<!-- saved from url=(0032)http://127.0.0.1:5502/index.html -->
+<html lang="zh-CN"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
     <title>交接班记录管理系统 v1.9</title>
-    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    <script src="./交接班记录管理系统 v1.9_files/xlsx.full.min.js.下载"></script><style type="text/css" class="print-ignore-style">
+                @media print {
+                    .print-ignore {
+                        display: none !important;
+                    }
+                }
+            </style>
     <style>
         :root {
             --primary: #2563eb;
@@ -428,13 +429,13 @@
             .home-nav-btn { flex: 1; min-width: 96px; justify-content: center; text-align: center; }
         }
     </style>
-</head>
+</head><div id="mask-2E010B9A-9E10-498E-8664-8A0DAA22D7CB" class="print-ignore" style="position: fixed; top: 0px; left: 0px; width: 100%; height: 100%; z-index: 2147483647; mix-blend-mode: unset; pointer-events: none; transition: opacity 0.1s ease 0s; opacity: 1; display: none; background: rgba(255, 255, 255, 0);"></div>
 <body>
 
 <!-- Header -->
 <div class="header">
     <h1>🏭 交接班记录管理系统<span>v1.9</span></h1>
-    <div class="header-actions">
+    <div class="header-actions" id="headerActions">
         <button class="btn btn-sm" style="background:rgba(255,255,255,0.2);color:white;border:none;" onclick="openSmeltingModal()">🔗 集成冶炼数据</button>
         <div class="furnace-badge" id="headerFurnace">炉号: 101</div>
     </div>
@@ -448,8 +449,8 @@
     <div class="home-shell">
         <div class="home-nav">
             <button class="home-nav-btn home-nav-primary" onclick="goToNewEntry()">➕ 新增</button>
-            <button class="home-nav-btn active" id="homeNavView" onclick="switchHomePanel('view')">📋 数据查看</button>
-            <button class="home-nav-btn" id="homeNavManage" onclick="switchHomePanel('manage')">⚙️ 数据管理</button>
+            <button class="home-nav-btn active" id="homeNavView" onclick="switchHomePanel(&#39;view&#39;)">📋 数据查看</button>
+            <button class="home-nav-btn" id="homeNavManage" onclick="switchHomePanel(&#39;manage&#39;)">⚙️ 数据管理</button>
         </div>
         <div class="home-body">
             <!-- 数据查看 -->
@@ -480,7 +481,7 @@
                             <option value="second">乙班</option>
                             <option value="third">丙班</option>
                         </select>
-                        <input type="text" class="home-search" id="homeFilterSearch" placeholder="搜索关键词，Enter 确认" onkeydown="if(event.key==='Enter')homeFilterChanged()">
+                        <input type="text" class="home-search" id="homeFilterSearch" placeholder="搜索关键词，Enter 确认" onkeydown="if(event.key===&#39;Enter&#39;)homeFilterChanged()">
                     </div>
                 </div>
 
@@ -501,10 +502,330 @@
                                     <th class="col-actions">操作</th>
                                 </tr>
                             </thead>
-                            <tbody id="homeTableBody"></tbody>
+                            <tbody id="homeTableBody"><tr class="selected" data-id="mtcjsxvb3tl7i" onclick="selectHomeRecord(&#39;mtcjsxvb3tl7i&#39;)">
+            <td class="col-index">1</td>
+            <td>101炉</td>
+            <td>2026/08/28</td>
+            <td>甲班</td>
+            <td>白班</td>
+            <td>张治顺、陆斌</td>
+            <td><div class="content-preview">值班长：张治顺、陆斌…</div></td>
+            <td style="font-size:12px;color:var(--text2);white-space:nowrap;">2026/08/28 14:05:54</td>
+            <td style="font-size:12px;color:var(--text2);white-space:nowrap;">2026/08/28 14:08:57</td>
+            <td class="col-actions" onclick="event.stopPropagation()">
+                <button class="link-btn" onclick="viewHomeRecord(&#39;mtcjsxvb3tl7i&#39;)">查看</button>
+                <button class="link-btn" onclick="editRecord(&#39;mtcjsxvb3tl7i&#39;)">编辑</button>
+                <button class="link-btn danger" onclick="deleteRecord(&#39;mtcjsxvb3tl7i&#39;)">删除</button>
+            </td>
+        </tr><tr class="" data-id="mtatyktzo49wq" onclick="selectHomeRecord(&#39;mtatyktzo49wq&#39;)">
+            <td class="col-index">2</td>
+            <td>101炉</td>
+            <td>2026/08/27</td>
+            <td>-</td>
+            <td>白班</td>
+            <td>张治顺、陆斌</td>
+            <td><div class="content-preview">本班出铁4炉，
+</div></td>
+            <td style="font-size:12px;color:var(--text2);white-space:nowrap;">2026/08/27 09:14:41</td>
+            <td style="font-size:12px;color:var(--text2);white-space:nowrap;">2026/08/28 14:08:57</td>
+            <td class="col-actions" onclick="event.stopPropagation()">
+                <button class="link-btn" onclick="viewHomeRecord(&#39;mtatyktzo49wq&#39;)">查看</button>
+                <button class="link-btn" onclick="editRecord(&#39;mtatyktzo49wq&#39;)">编辑</button>
+                <button class="link-btn danger" onclick="deleteRecord(&#39;mtatyktzo49wq&#39;)">删除</button>
+            </td>
+        </tr><tr class="" data-id="mtaw19h1j4rog" onclick="selectHomeRecord(&#39;mtaw19h1j4rog&#39;)">
+            <td class="col-index">3</td>
+            <td>101炉</td>
+            <td>2026/08/27</td>
+            <td>-</td>
+            <td>白班</td>
+            <td>张治顺、陆斌</td>
+            <td><div class="content-preview">本班出铁4炉，
+</div></td>
+            <td style="font-size:12px;color:var(--text2);white-space:nowrap;">2026/08/27 10:12:46</td>
+            <td style="font-size:12px;color:var(--text2);white-space:nowrap;">2026/08/28 14:08:57</td>
+            <td class="col-actions" onclick="event.stopPropagation()">
+                <button class="link-btn" onclick="viewHomeRecord(&#39;mtaw19h1j4rog&#39;)">查看</button>
+                <button class="link-btn" onclick="editRecord(&#39;mtaw19h1j4rog&#39;)">编辑</button>
+                <button class="link-btn danger" onclick="deleteRecord(&#39;mtaw19h1j4rog&#39;)">删除</button>
+            </td>
+        </tr><tr class="" data-id="mtawc2vh2yu0c" onclick="selectHomeRecord(&#39;mtawc2vh2yu0c&#39;)">
+            <td class="col-index">4</td>
+            <td>101炉</td>
+            <td>2026/08/27</td>
+            <td>甲班</td>
+            <td>白班</td>
+            <td>张治顺、陆斌</td>
+            <td><div class="content-preview">班组：甲班
+</div></td>
+            <td style="font-size:12px;color:var(--text2);white-space:nowrap;">2026/08/27 10:21:10</td>
+            <td style="font-size:12px;color:var(--text2);white-space:nowrap;">2026/08/28 14:08:57</td>
+            <td class="col-actions" onclick="event.stopPropagation()">
+                <button class="link-btn" onclick="viewHomeRecord(&#39;mtawc2vh2yu0c&#39;)">查看</button>
+                <button class="link-btn" onclick="editRecord(&#39;mtawc2vh2yu0c&#39;)">编辑</button>
+                <button class="link-btn danger" onclick="deleteRecord(&#39;mtawc2vh2yu0c&#39;)">删除</button>
+            </td>
+        </tr><tr class="" data-id="mtawf3o465idw" onclick="selectHomeRecord(&#39;mtawf3o465idw&#39;)">
+            <td class="col-index">5</td>
+            <td>101炉</td>
+            <td>2026/08/27</td>
+            <td>甲班</td>
+            <td>白班</td>
+            <td>小宇子</td>
+            <td><div class="content-preview">班组：甲班
+</div></td>
+            <td style="font-size:12px;color:var(--text2);white-space:nowrap;">2026/08/27 10:23:31</td>
+            <td style="font-size:12px;color:var(--text2);white-space:nowrap;">2026/08/28 14:08:57</td>
+            <td class="col-actions" onclick="event.stopPropagation()">
+                <button class="link-btn" onclick="viewHomeRecord(&#39;mtawf3o465idw&#39;)">查看</button>
+                <button class="link-btn" onclick="editRecord(&#39;mtawf3o465idw&#39;)">编辑</button>
+                <button class="link-btn danger" onclick="deleteRecord(&#39;mtawf3o465idw&#39;)">删除</button>
+            </td>
+        </tr><tr class="" data-id="mtbau62steur1" onclick="selectHomeRecord(&#39;mtbau62steur1&#39;)">
+            <td class="col-index">6</td>
+            <td>101炉</td>
+            <td>2026/08/27</td>
+            <td>丙班</td>
+            <td>夜班</td>
+            <td>张治顺、秦贵保</td>
+            <td><div class="content-preview">值班长：张治顺、秦贵…</div></td>
+            <td style="font-size:12px;color:var(--text2);white-space:nowrap;">2026/08/27 17:07:09</td>
+            <td style="font-size:12px;color:var(--text2);white-space:nowrap;">2026/08/28 14:08:57</td>
+            <td class="col-actions" onclick="event.stopPropagation()">
+                <button class="link-btn" onclick="viewHomeRecord(&#39;mtbau62steur1&#39;)">查看</button>
+                <button class="link-btn" onclick="editRecord(&#39;mtbau62steur1&#39;)">编辑</button>
+                <button class="link-btn danger" onclick="deleteRecord(&#39;mtbau62steur1&#39;)">删除</button>
+            </td>
+        </tr><tr class="" data-id="mtaty8ddfo7or" onclick="selectHomeRecord(&#39;mtaty8ddfo7or&#39;)">
+            <td class="col-index">7</td>
+            <td>101炉</td>
+            <td>2026/08/25</td>
+            <td>甲班</td>
+            <td>夜班</td>
+            <td>张治顺、陆斌</td>
+            <td><div class="content-preview">本班出铁3炉，
+</div></td>
+            <td style="font-size:12px;color:var(--text2);white-space:nowrap;">2026/08/27 09:14:25</td>
+            <td style="font-size:12px;color:var(--text2);white-space:nowrap;">2026/08/28 14:08:57</td>
+            <td class="col-actions" onclick="event.stopPropagation()">
+                <button class="link-btn" onclick="viewHomeRecord(&#39;mtaty8ddfo7or&#39;)">查看</button>
+                <button class="link-btn" onclick="editRecord(&#39;mtaty8ddfo7or&#39;)">编辑</button>
+                <button class="link-btn danger" onclick="deleteRecord(&#39;mtaty8ddfo7or&#39;)">删除</button>
+            </td>
+        </tr><tr class="" data-id="mtazb0cwyqnkm" onclick="selectHomeRecord(&#39;mtazb0cwyqnkm&#39;)">
+            <td class="col-index">8</td>
+            <td>102炉</td>
+            <td>2026/08/20</td>
+            <td>-</td>
+            <td>夜班</td>
+            <td>-</td>
+            <td><div class="content-preview">本班出铁4炉，
+</div></td>
+            <td style="font-size:12px;color:var(--text2);white-space:nowrap;">2026/08/27 11:44:19</td>
+            <td style="font-size:12px;color:var(--text2);white-space:nowrap;">2026/08/28 14:08:57</td>
+            <td class="col-actions" onclick="event.stopPropagation()">
+                <button class="link-btn" onclick="viewHomeRecord(&#39;mtazb0cwyqnkm&#39;)">查看</button>
+                <button class="link-btn" onclick="editRecord(&#39;mtazb0cwyqnkm&#39;)">编辑</button>
+                <button class="link-btn danger" onclick="deleteRecord(&#39;mtazb0cwyqnkm&#39;)">删除</button>
+            </td>
+        </tr><tr class="" data-id="mtazb0cuq1uw4" onclick="selectHomeRecord(&#39;mtazb0cuq1uw4&#39;)">
+            <td class="col-index">9</td>
+            <td>101炉</td>
+            <td>2026/08/20</td>
+            <td>-</td>
+            <td>夜班</td>
+            <td>-</td>
+            <td><div class="content-preview">本班出铁三炉，
+</div></td>
+            <td style="font-size:12px;color:var(--text2);white-space:nowrap;">2026/08/27 11:44:19</td>
+            <td style="font-size:12px;color:var(--text2);white-space:nowrap;">2026/08/28 14:08:57</td>
+            <td class="col-actions" onclick="event.stopPropagation()">
+                <button class="link-btn" onclick="viewHomeRecord(&#39;mtazb0cuq1uw4&#39;)">查看</button>
+                <button class="link-btn" onclick="editRecord(&#39;mtazb0cuq1uw4&#39;)">编辑</button>
+                <button class="link-btn danger" onclick="deleteRecord(&#39;mtazb0cuq1uw4&#39;)">删除</button>
+            </td>
+        </tr><tr class="" data-id="mt8gsif45k1l7" onclick="selectHomeRecord(&#39;mt8gsif45k1l7&#39;)">
+            <td class="col-index">10</td>
+            <td>202炉</td>
+            <td>2026/08/20</td>
+            <td>-</td>
+            <td>夜班</td>
+            <td>-</td>
+            <td><div class="content-preview">电流后期有点波动
+</div></td>
+            <td style="font-size:12px;color:var(--text2);white-space:nowrap;">2026/08/25 17:30:31</td>
+            <td style="font-size:12px;color:var(--text2);white-space:nowrap;">2026/08/28 14:08:57</td>
+            <td class="col-actions" onclick="event.stopPropagation()">
+                <button class="link-btn" onclick="viewHomeRecord(&#39;mt8gsif45k1l7&#39;)">查看</button>
+                <button class="link-btn" onclick="editRecord(&#39;mt8gsif45k1l7&#39;)">编辑</button>
+                <button class="link-btn danger" onclick="deleteRecord(&#39;mt8gsif45k1l7&#39;)">删除</button>
+            </td>
+        </tr><tr class="" data-id="mt8gsif33swph" onclick="selectHomeRecord(&#39;mt8gsif33swph&#39;)">
+            <td class="col-index">11</td>
+            <td>201炉</td>
+            <td>2026/08/20</td>
+            <td>-</td>
+            <td>夜班</td>
+            <td>-</td>
+            <td><div class="content-preview">本班出铁2炉南、铁口…</div></td>
+            <td style="font-size:12px;color:var(--text2);white-space:nowrap;">2026/08/25 17:30:31</td>
+            <td style="font-size:12px;color:var(--text2);white-space:nowrap;">2026/08/28 14:08:57</td>
+            <td class="col-actions" onclick="event.stopPropagation()">
+                <button class="link-btn" onclick="viewHomeRecord(&#39;mt8gsif33swph&#39;)">查看</button>
+                <button class="link-btn" onclick="editRecord(&#39;mt8gsif33swph&#39;)">编辑</button>
+                <button class="link-btn danger" onclick="deleteRecord(&#39;mt8gsif33swph&#39;)">删除</button>
+            </td>
+        </tr><tr class="" data-id="mtazb0cweqr2z" onclick="selectHomeRecord(&#39;mtazb0cweqr2z&#39;)">
+            <td class="col-index">12</td>
+            <td>102炉</td>
+            <td>2026/08/19</td>
+            <td>-</td>
+            <td>白班</td>
+            <td>-</td>
+            <td><div class="content-preview">本班出铁3炉，
+</div></td>
+            <td style="font-size:12px;color:var(--text2);white-space:nowrap;">2026/08/27 11:44:19</td>
+            <td style="font-size:12px;color:var(--text2);white-space:nowrap;">2026/08/28 14:08:57</td>
+            <td class="col-actions" onclick="event.stopPropagation()">
+                <button class="link-btn" onclick="viewHomeRecord(&#39;mtazb0cweqr2z&#39;)">查看</button>
+                <button class="link-btn" onclick="editRecord(&#39;mtazb0cweqr2z&#39;)">编辑</button>
+                <button class="link-btn danger" onclick="deleteRecord(&#39;mtazb0cweqr2z&#39;)">删除</button>
+            </td>
+        </tr><tr class="" data-id="mtazb0cuk2j7t" onclick="selectHomeRecord(&#39;mtazb0cuk2j7t&#39;)">
+            <td class="col-index">13</td>
+            <td>101炉</td>
+            <td>2026/08/19</td>
+            <td>-</td>
+            <td>白班</td>
+            <td>-</td>
+            <td><div class="content-preview">本班出铁四炉，
+</div></td>
+            <td style="font-size:12px;color:var(--text2);white-space:nowrap;">2026/08/27 11:44:19</td>
+            <td style="font-size:12px;color:var(--text2);white-space:nowrap;">2026/08/28 14:08:57</td>
+            <td class="col-actions" onclick="event.stopPropagation()">
+                <button class="link-btn" onclick="viewHomeRecord(&#39;mtazb0cuk2j7t&#39;)">查看</button>
+                <button class="link-btn" onclick="editRecord(&#39;mtazb0cuk2j7t&#39;)">编辑</button>
+                <button class="link-btn danger" onclick="deleteRecord(&#39;mtazb0cuk2j7t&#39;)">删除</button>
+            </td>
+        </tr><tr class="" data-id="mt8gsif4twkip" onclick="selectHomeRecord(&#39;mt8gsif4twkip&#39;)">
+            <td class="col-index">14</td>
+            <td>202炉</td>
+            <td>2026/08/19</td>
+            <td>-</td>
+            <td>白班</td>
+            <td>-</td>
+            <td><div class="content-preview">南面铁口；
+</div></td>
+            <td style="font-size:12px;color:var(--text2);white-space:nowrap;">2026/08/25 17:30:31</td>
+            <td style="font-size:12px;color:var(--text2);white-space:nowrap;">2026/08/28 14:08:57</td>
+            <td class="col-actions" onclick="event.stopPropagation()">
+                <button class="link-btn" onclick="viewHomeRecord(&#39;mt8gsif4twkip&#39;)">查看</button>
+                <button class="link-btn" onclick="editRecord(&#39;mt8gsif4twkip&#39;)">编辑</button>
+                <button class="link-btn danger" onclick="deleteRecord(&#39;mt8gsif4twkip&#39;)">删除</button>
+            </td>
+        </tr><tr class="" data-id="mt8gsif33y7bz" onclick="selectHomeRecord(&#39;mt8gsif33y7bz&#39;)">
+            <td class="col-index">15</td>
+            <td>201炉</td>
+            <td>2026/08/19</td>
+            <td>-</td>
+            <td>白班</td>
+            <td>-</td>
+            <td><div class="content-preview">本班出铁2炉南、铁口…</div></td>
+            <td style="font-size:12px;color:var(--text2);white-space:nowrap;">2026/08/25 17:30:31</td>
+            <td style="font-size:12px;color:var(--text2);white-space:nowrap;">2026/08/28 14:08:57</td>
+            <td class="col-actions" onclick="event.stopPropagation()">
+                <button class="link-btn" onclick="viewHomeRecord(&#39;mt8gsif33y7bz&#39;)">查看</button>
+                <button class="link-btn" onclick="editRecord(&#39;mt8gsif33y7bz&#39;)">编辑</button>
+                <button class="link-btn danger" onclick="deleteRecord(&#39;mt8gsif33y7bz&#39;)">删除</button>
+            </td>
+        </tr><tr class="" data-id="mtazb0cwo7yaz" onclick="selectHomeRecord(&#39;mtazb0cwo7yaz&#39;)">
+            <td class="col-index">16</td>
+            <td>102炉</td>
+            <td>2026/08/19</td>
+            <td>-</td>
+            <td>夜班</td>
+            <td>-</td>
+            <td><div class="content-preview">本班出铁4炉，
+</div></td>
+            <td style="font-size:12px;color:var(--text2);white-space:nowrap;">2026/08/27 11:44:19</td>
+            <td style="font-size:12px;color:var(--text2);white-space:nowrap;">2026/08/28 14:08:57</td>
+            <td class="col-actions" onclick="event.stopPropagation()">
+                <button class="link-btn" onclick="viewHomeRecord(&#39;mtazb0cwo7yaz&#39;)">查看</button>
+                <button class="link-btn" onclick="editRecord(&#39;mtazb0cwo7yaz&#39;)">编辑</button>
+                <button class="link-btn danger" onclick="deleteRecord(&#39;mtazb0cwo7yaz&#39;)">删除</button>
+            </td>
+        </tr><tr class="" data-id="mtazb0cu2vhuk" onclick="selectHomeRecord(&#39;mtazb0cu2vhuk&#39;)">
+            <td class="col-index">17</td>
+            <td>101炉</td>
+            <td>2026/08/19</td>
+            <td>-</td>
+            <td>夜班</td>
+            <td>-</td>
+            <td><div class="content-preview">本班出铁3炉，
+</div></td>
+            <td style="font-size:12px;color:var(--text2);white-space:nowrap;">2026/08/27 11:44:19</td>
+            <td style="font-size:12px;color:var(--text2);white-space:nowrap;">2026/08/28 14:08:57</td>
+            <td class="col-actions" onclick="event.stopPropagation()">
+                <button class="link-btn" onclick="viewHomeRecord(&#39;mtazb0cu2vhuk&#39;)">查看</button>
+                <button class="link-btn" onclick="editRecord(&#39;mtazb0cu2vhuk&#39;)">编辑</button>
+                <button class="link-btn danger" onclick="deleteRecord(&#39;mtazb0cu2vhuk&#39;)">删除</button>
+            </td>
+        </tr><tr class="" data-id="mt8gsif449uw6" onclick="selectHomeRecord(&#39;mt8gsif449uw6&#39;)">
+            <td class="col-index">18</td>
+            <td>202炉</td>
+            <td>2026/08/19</td>
+            <td>-</td>
+            <td>夜班</td>
+            <td>-</td>
+            <td><div class="content-preview">北面；
+</div></td>
+            <td style="font-size:12px;color:var(--text2);white-space:nowrap;">2026/08/25 17:30:31</td>
+            <td style="font-size:12px;color:var(--text2);white-space:nowrap;">2026/08/28 14:08:57</td>
+            <td class="col-actions" onclick="event.stopPropagation()">
+                <button class="link-btn" onclick="viewHomeRecord(&#39;mt8gsif449uw6&#39;)">查看</button>
+                <button class="link-btn" onclick="editRecord(&#39;mt8gsif449uw6&#39;)">编辑</button>
+                <button class="link-btn danger" onclick="deleteRecord(&#39;mt8gsif449uw6&#39;)">删除</button>
+            </td>
+        </tr><tr class="" data-id="mt8gsif3te0c9" onclick="selectHomeRecord(&#39;mt8gsif3te0c9&#39;)">
+            <td class="col-index">19</td>
+            <td>201炉</td>
+            <td>2026/08/19</td>
+            <td>-</td>
+            <td>夜班</td>
+            <td>-</td>
+            <td><div class="content-preview">本班出铁三炉北面铁口…</div></td>
+            <td style="font-size:12px;color:var(--text2);white-space:nowrap;">2026/08/25 17:30:31</td>
+            <td style="font-size:12px;color:var(--text2);white-space:nowrap;">2026/08/28 14:08:57</td>
+            <td class="col-actions" onclick="event.stopPropagation()">
+                <button class="link-btn" onclick="viewHomeRecord(&#39;mt8gsif3te0c9&#39;)">查看</button>
+                <button class="link-btn" onclick="editRecord(&#39;mt8gsif3te0c9&#39;)">编辑</button>
+                <button class="link-btn danger" onclick="deleteRecord(&#39;mt8gsif3te0c9&#39;)">删除</button>
+            </td>
+        </tr><tr class="" data-id="mtazb0cw1fmg0" onclick="selectHomeRecord(&#39;mtazb0cw1fmg0&#39;)">
+            <td class="col-index">20</td>
+            <td>102炉</td>
+            <td>2026/08/18</td>
+            <td>-</td>
+            <td>白班</td>
+            <td>-</td>
+            <td><div class="content-preview">本班出铁4炉，
+</div></td>
+            <td style="font-size:12px;color:var(--text2);white-space:nowrap;">2026/08/27 11:44:19</td>
+            <td style="font-size:12px;color:var(--text2);white-space:nowrap;">2026/08/28 14:08:57</td>
+            <td class="col-actions" onclick="event.stopPropagation()">
+                <button class="link-btn" onclick="viewHomeRecord(&#39;mtazb0cw1fmg0&#39;)">查看</button>
+                <button class="link-btn" onclick="editRecord(&#39;mtazb0cw1fmg0&#39;)">编辑</button>
+                <button class="link-btn danger" onclick="deleteRecord(&#39;mtazb0cw1fmg0&#39;)">删除</button>
+            </td>
+        </tr></tbody>
                         </table>
                     </div>
-                    <div class="home-pagination" id="homePagination"></div>
+                    <div class="home-pagination" id="homePagination"><span>共 1833 条</span><button class="page-btn" onclick="homeGoPage(0)" disabled="">&lt;</button><button class="page-btn active" onclick="homeGoPage(1)">1</button><button class="page-btn" onclick="homeGoPage(2)">2</button><button class="page-btn" onclick="homeGoPage(3)">3</button><button class="page-btn" onclick="homeGoPage(4)">4</button><button class="page-btn" onclick="homeGoPage(5)">5</button><button class="page-btn" onclick="homeGoPage(2)">&gt;</button><select onchange="homeChangePageSize(this.value)">
+        <option value="10">10条/页</option>
+        <option value="20" selected="">20条/页</option>
+        <option value="30">30条/页</option>
+        <option value="50">50条/页</option>
+    </select></div>
                 </div>
 
                 <div class="home-detail" id="homeDetailPanel">
@@ -517,13 +838,23 @@
                     <div class="home-detail-tabs">
                         <button class="home-detail-tab active">作业情况</button>
                     </div>
-                    <div class="home-detail-body empty" id="homeDetailContent">请在上方列表中选择一条记录查看详情</div>
+                    <div class="home-detail-body empty" id="homeDetailContent"></div>
                 </div>
             </div>
 
             <!-- 数据管理 -->
             <div id="homePanelManage" class="home-panel">
-                <div class="stat-grid" id="statsGrid"></div>
+                <div class="stat-grid" id="statsGrid">
+        <div class="stat-card"><div class="stat-num">1833</div><div class="stat-label">总记录数</div></div>
+        <div class="stat-card"><div class="stat-num">472</div><div class="stat-label">101炉记录</div></div>
+        <div class="stat-card"><div class="stat-num">433</div><div class="stat-label">102炉记录</div></div>
+        <div class="stat-card"><div class="stat-num">464</div><div class="stat-label">201炉记录</div></div>
+        <div class="stat-card"><div class="stat-num">464</div><div class="stat-label">202炉记录</div></div>
+        <div class="stat-card"><div class="stat-num">915</div><div class="stat-label">白班记录</div></div>
+        <div class="stat-card"><div class="stat-num">918</div><div class="stat-label">夜班记录</div></div>
+        <div class="stat-card"><div class="stat-num">232807</div><div class="stat-label">总字数</div></div>
+        <div class="stat-card" style="grid-column: span 2;"><div class="stat-num" style="font-size:18px;">2025年12月31日 周三 ~ 2026年8月28日 周五</div><div class="stat-label">日期范围</div></div>
+    </div>
 
                 <div class="card" style="margin-top:16px;">
                     <div class="card-header"><span class="section-icon">📤</span><h3>导出 Excel</h3></div>
@@ -576,6 +907,7 @@
                 <div class="form-group">
                     <label>炉号<span class="req">*</span></label>
                     <select id="furnaceNumber" onchange="updateHeaderFurnace()">
+                        <option value="">-</option>
                         <option value="101">101炉</option>
                         <option value="102">102炉</option>
                         <option value="201">201炉</option>
@@ -589,6 +921,7 @@
                 <div class="form-group">
                     <label>班次<span class="req">*</span></label>
                     <select id="shiftType">
+                        <option value="">-</option>
                         <option value="day">白班</option>
                         <option value="night">夜班</option>
                     </select>
@@ -596,6 +929,7 @@
                  <div class="form-group">
                     <label>班组<span class="req">*</span></label>
                     <select id="team">
+                        <option value="">-</option>
                         <option value="first">甲班</option>
                         <option value="second">乙班</option>
                         <option value="third">丙班</option>
@@ -620,31 +954,31 @@
                     <select id="ironCount"><option value="">-</option><option>0</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select>
                 </div>
                 <div class="form-group">
-                    <label>南面炉数<span class="req">*</span></label>
+                    <label>南面炉数</label>
                     <select id="southCount"><option value="">-</option><option>0</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select>
                 </div>
                 <div class="form-group">
-                    <label>北面炉数<span class="req">*</span></label>
+                    <label>北面炉数</label>
                     <select id="northCount"><option value="">-</option><option>0</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select>
                 </div>
             </div>
-            <div class="sub-title">铁口操作</div>
+            <div class="sub-title" id="tapOpSubTitle">铁口操作</div>
             <div class="form-row cols-2">
-                <div class="form-group">
+                <div class="form-group" id="southTapOpWrap">
                     <label>南面铁口<span class="req">*</span></label>
                     <select id="southTapOp"><option value="">-</option><option value="打开">打开</option><option value="烧开">烧开</option><option value="捅开">捅开</option></select>
                 </div>
-                <div class="form-group">
+                <div class="form-group" id="northTapOpWrap">
                     <label>北面铁口<span class="req">*</span></label>
                     <select id="northTapOp"><option value="">-</option><option value="打开">打开</option><option value="烧开">烧开</option><option value="捅开">捅开</option></select>
                 </div>
             </div>
             <div class="form-row cols-2">
-                <div class="form-group">
+                <div class="form-group" id="southDepthWrap">
                     <label>南面铁口深度 (mm)<span class="req">*</span></label>
                     <input type="number" id="southDepth" placeholder="如: 1200" min="0" max="1400">
                 </div>
-                <div class="form-group">
+                <div class="form-group" id="northDepthWrap">
                     <label>北面铁口深度 (mm)<span class="req">*</span></label>
                     <input type="number" id="northDepth" placeholder="如: 1400" min="0" max="1400">
                 </div>
@@ -656,6 +990,7 @@
     <div class="card">
         <div class="card-header"><span class="section-icon">📊</span><h3>南面 / 北面情况</h3></div>
         <div class="card-body">
+            <div id="southSideSection">
             <div class="sub-title">南面</div>
             <div class="form-row cols-3">
                 <div class="form-group">
@@ -691,6 +1026,8 @@
                     <input type="number" id="southSlag" min="0" step="0.5" placeholder="请输入包数">
                 </div>
             </div>
+            </div>
+            <div id="northSideSection">
             <div class="sub-title">北面</div>
             <div class="form-row cols-3">
                 <div class="form-group">
@@ -726,6 +1063,7 @@
                     <input type="number" id="northSlag" min="0" step="0.5" placeholder="请输入包数">
                 </div>
             </div>
+            </div>
         </div>
     </div>
 
@@ -757,6 +1095,13 @@
                     <select id="collapse"><option value="">-</option><option>无</option><option>偶尔</option><option>频繁</option></select>
                 </div>
             </div>
+        </div>
+    </div>
+
+    <!-- Section 4: 系统状态 -->
+    <div class="card">
+        <div class="card-header"><span class="section-icon">🔧</span><h3>系统状态</h3></div>
+        <div class="card-body">
             <div class="form-row cols-3">
                 <div class="form-group">
                     <label>三相电极实际压放量(mm)</label>
@@ -769,16 +1114,9 @@
                     <input type="number" id="pressC" placeholder="C相" min="0" style="margin-top:18px;">
                 </div>
             </div>
-        </div>
-    </div>
-
-    <!-- Section 4: 系统状态 -->
-    <div class="card">
-        <div class="card-header"><span class="section-icon">🔧</span><h3>系统状态</h3></div>
-        <div class="card-body">
             <div class="form-row cols-2">
                 <div class="form-group">
-                    <label>电极位置<span class="req">*</span></label>
+                    <label>电极位置</label>
                     <select id="electrodePos"><option value="">-</option><option>正常</option><option value="__custom__">自定义</option></select>
                     <textarea id="electrodePosCustom" rows="2" placeholder="请输入..." style="display:none; margin-top:4px; width:100%; resize:vertical; font-family:inherit; font-size:14px; line-height:1.6;"></textarea>
                 </div>
@@ -821,15 +1159,15 @@
         <div class="card-header"><span class="section-icon">📝</span><h3>其他</h3></div>
         <div class="card-body">
             <div class="form-group" style="margin-bottom:12px;">
-                <label>本班变料情况<span class="req">*</span></label>
+                <label>本班变料情况</label>
                 <textarea id="materialChange" rows="2" placeholder="如无变料可填"无""></textarea>
             </div>
             <div class="form-group" style="margin-bottom:12px;">
-                <label>异常情况重点交班<span class="req">*</span></label>
+                <label>异常情况重点交班</label>
                 <textarea id="abnormal" rows="2" placeholder="如无异常可填"无""></textarea>
             </div>
             <div class="form-group">
-                <label>补充说明（自由填写，会追加到生成文本末尾）<span class="req">*</span></label>
+                <label>补充说明（自由填写，会追加到生成文本末尾）</label>
                 <textarea id="additionalNotes" rows="3" placeholder="其他需要记录的内容..."></textarea>
             </div>
         </div>
@@ -839,10 +1177,26 @@
     <div class="card">
         <div class="card-header">
             <span class="section-icon">👁️</span><h3>生成文本预览</h3>
-            <span class="badge" id="charCount">0 字</span>
+            <span class="badge" id="charCount">258 字</span>
         </div>
         <div class="card-body">
-            <div class="preview-box empty" id="previewBox">填写表单后自动生成作业情况文本...</div>
+            <div class="preview-box" id="previewBox">值班长：张治顺、陆斌  班组：甲班
+
+本班出铁4炉，2南，2北，
+
+南面铁口打开开，深度1200mm，炉温（流动性）好，流量一般，铁口无卡堵，不用通拉，吹氧0瓶，排碳合适，渣量0.5包；
+
+北面铁口打开开，深度1400mm，炉温（流动性）好，流量一般，铁口无卡堵，不用通拉，吹氧0瓶，排碳多，渣量1.5包；
+
+炉况正常，电流稳定，炉压稳定，无冲火，无塌料
+
+电极位置：正常  炉内温度：正常  电极压放：正常  液压系统：正常  水冷系统：正常  机电设备运转：正常
+
+本班变料情况：无
+
+异常情况重点交班：无
+
+无</div>
             <div class="btn-group" style="margin-top:12px;">
                 <button class="btn btn-primary" onclick="saveRecord()">💾 保存记录</button>
                 <button class="btn btn-outline" onclick="copyPreviewText()">📋 复制文本</button>
@@ -859,7 +1213,7 @@
     <div class="modal">
         <div class="modal-header">
             <h3 id="editModalTitle">编辑记录</h3>
-            <button class="modal-close" onclick="closeEditModal()">&times;</button>
+            <button class="modal-close" onclick="closeEditModal()">×</button>
         </div>
         <div class="modal-body">
             <!-- ====== [修改] 编辑弹窗从3列改为4列，新增值班长编辑 ====== -->
@@ -907,14 +1261,13 @@
     <div class="modal" style="max-width:400px;">
         <div class="modal-header">
             <h3>确认删除</h3>
-            <button class="modal-close" onclick="closeDeleteAuthModal()">&times;</button>
+            <button class="modal-close" onclick="closeDeleteAuthModal()">×</button>
         </div>
         <div class="modal-body">
             <p style="font-size:14px; color:var(--text2); margin-bottom:12px;">删除此记录需要输入删除密码</p>
             <div class="form-group">
                 <label>删除密码</label>
-                <input type="password" id="deletePassword" placeholder="请输入删除密码" autocomplete="off"
-                       onkeydown="if(event.key==='Enter')confirmDeleteWithPassword()">
+                <input type="password" id="deletePassword" placeholder="请输入删除密码" autocomplete="off" onkeydown="if(event.key===&#39;Enter&#39;)confirmDeleteWithPassword()">
             </div>
             <p id="deleteAuthError" style="display:none; font-size:13px; color:var(--red); margin-top:8px;">密码错误，请重试</p>
         </div>
@@ -931,13 +1284,14 @@
     <div class="modal smelting-modal">
         <div class="modal-header">
             <h3>🔗 集成冶炼数据</h3>
-            <button class="modal-close" onclick="closeSmeltingModal()">&times;</button>
+            <button class="modal-close" onclick="closeSmeltingModal()">×</button>
         </div>
         <div class="modal-body">
             <div class="form-row cols-3">
                 <div class="form-group">
                     <label>炉号</label>
-                    <select id="smeltingFurnace">
+                    <select id="smeltingFurnace" onchange="onSmeltingQueryChanged()">
+                        <option value="">-</option>
                         <option value="101">101炉</option>
                         <option value="102">102炉</option>
                         <option value="201">201炉</option>
@@ -946,12 +1300,12 @@
                 </div>
                 <div class="form-group">
                     <label>日期</label>
-                    <input type="date" id="smeltingDate">
+                    <input type="date" id="smeltingDate" onchange="onSmeltingQueryChanged()">
                 </div>
                 <div class="form-group">
                     <label>班次</label>
-                    <select id="smeltingShift">
-                        <option value="">全部</option>
+                    <select id="smeltingShift" onchange="onSmeltingQueryChanged()">
+                        <option value="">-</option>
                         <option value="白班">白班</option>
                         <option value="夜班">夜班</option>
                     </select>
@@ -960,16 +1314,17 @@
             <div style="margin:12px 0;">
                 <button class="btn btn-primary" onclick="doSmeltingFetch()">获取数据</button>
                 <button class="btn btn-outline" onclick="closeSmeltingModal()">取消</button>
+                <span style="font-size:12px;color:var(--text3);margin-left:8px;">炉号、日期、班次选齐后自动获取</span>
             </div>
             <div id="smeltingResult" style="display:none;"></div>
         </div>
     </div>
 </div>
 
-<div class="toast" id="toast"></div>
+<div class="toast success" id="toast">已恢复未完成的填写内容</div>
 
 <!-- Scroll to top -->
-<button class="scroll-top" id="scrollTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+<button class="scroll-top show" id="scrollTop" onclick="window.scrollTo({top:0,behavior:&#39;smooth&#39;})">↑</button>
 
 <script>
 // ==================== 冶炼卡 API（保留原始 13 段数据，不做字段改写） ====================
@@ -1231,6 +1586,7 @@ function buildShiftIndexFromRaw(segments, queryDate, queryShift) {
       tappingDateFallback: tapResult.fallback,
       timeCorrectedCount,
       electrodeLen: filterByRid(segments[SEGMENT.ELECTRODE_LEN], rid),
+      electrodePaste: filterByRid(segments[SEGMENT.ELECTRODE_PASTE], rid),
       batch: filterByRid(segments[SEGMENT.BATCH], rid)
     };
   });
@@ -1486,6 +1842,7 @@ function renderSmeltingShiftDetailCard(shiftData, rid) {
   const classified = classifyTappingRecords(tapping);
   const { south: southRecords, north: northRecords, other: otherRecords } = classified;
   const electrode = getFormElectrodeValues(shiftData.electrodeLen);
+  const paste = getFormElectrodeValues(shiftData.electrodePaste);
   const summary = getShiftSummaryFromRaw(shiftData);
   const isSingleHoleFurnace = southRecords.length === 0 && northRecords.length === 0 && tapping.length > 0;
 
@@ -1547,6 +1904,13 @@ function renderSmeltingShiftDetailCard(shiftData, rid) {
   html += smeltingKvItem('A相', electrode.A);
   html += smeltingKvItem('B相', electrode.B);
   html += smeltingKvItem('C相', electrode.C);
+  html += '</div></div>';
+
+  // 本班加糊：仅展示，不同步到录入表单（API 段6 电极糊加入量）
+  html += '<div class="smelting-section"><h4>本班加糊</h4><div class="smelting-kv-grid">';
+  html += smeltingKvItem('A相', paste.A !== '' ? paste.A : '—');
+  html += smeltingKvItem('B相', paste.B !== '' ? paste.B : '—');
+  html += smeltingKvItem('C相', paste.C !== '' ? paste.C : '—');
   html += '</div></div>';
 
   if (shiftData.batch && shiftData.batch.length) {
@@ -1614,6 +1978,67 @@ function reformatLegacyContent(content) {
     return res.join('\r\n\r\n');
 }
 
+/** 去掉作业文本中的三相电极压放量（查看/复制/迁移时统一不展示） */
+function stripElectrodePressAmountFromContent(content) {
+    if (!content) return content;
+    let text = String(content);
+    // 整段仅为压放量
+    text = text.replace(/(^|\n\s*\n)\s*三相电极(?:实际)?压放量[：:][^\n]*/g, '$1');
+    // 正文中夹带的压放量短句
+    text = text.replace(/[，,]?\s*三相电极(?:实际)?压放量[：:][^。；;\n]*[。；;]?/g, '');
+    text = text.replace(/[，,]?\s*三相电极(?:实际)?压放量[：:]\s*A[（(][^）)]*[）)]\s*[，,]?\s*B[（(][^）)]*[）)]\s*[，,]?\s*C[（(][^）)]*[）)][。．.]?/gi, '');
+    // 清理多余空段与标点
+    text = text.replace(/\n{3,}/g, '\n\n').replace(/^[，,。；;\s]+/, '').replace(/[，,]\s*$/gm, '');
+    return text.trim();
+}
+
+/** 将多段稀疏文本压成与录入预览一致的段落结构 */
+function compactContentParagraphs(content) {
+    if (!content) return content;
+    let text = stripElectrodePressAmountFromContent(content);
+    if (!/\n\s*\n/.test(text) && text.indexOf('，') >= 0) {
+        text = reformatLegacyContent(text);
+        text = stripElectrodePressAmountFromContent(text);
+    }
+    const blocks = text.split(/\r?\n\s*\r?\n/).map(s => String(s).replace(/[ \t]+/g, ' ').trim()).filter(Boolean);
+    if (blocks.length <= 1) return blocks[0] || text;
+
+    const head = [];
+    const body = [];
+    let matChange = '';
+    let abnormal = '';
+    const notes = [];
+
+    function isPressBlock(b) {
+        return /三相电极(?:实际)?压放量/.test(b);
+    }
+    function isBodyBlock(b) {
+        if (isPressBlock(b)) return false;
+        return /^(本班出铁|南面|北面|炉况|电流|炉压|电极位置：|炉内温度：|电极压放：|液压系统：|水冷系统：|机电设备运转：)/.test(b)
+            || /(冲火|塌料)/.test(b)
+            || /电极位置：|炉内温度：|电极压放：|液压系统：|水冷系统：|机电设备运转：/.test(b);
+    }
+
+    blocks.forEach(b => {
+        if (isPressBlock(b)) return;
+        const cleaned = stripElectrodePressAmountFromContent(b);
+        if (!cleaned) return;
+        if (cleaned.startsWith('值班长：') || cleaned.startsWith('班组：')) head.push(cleaned);
+        else if (cleaned.startsWith('本班变料情况：')) matChange = cleaned;
+        else if (cleaned.startsWith('异常情况重点交班：')) abnormal = cleaned;
+        else if (isBodyBlock(cleaned)) body.push(cleaned);
+        else notes.push(cleaned);
+    });
+
+    const out = [];
+    if (head.length) out.push(head.join('  '));
+    if (body.length) out.push(body.join(''));
+    if (matChange) out.push(matChange);
+    if (abnormal) out.push(abnormal);
+    notes.forEach(n => out.push(n));
+    return out.join('\n\n');
+}
+
 function loadRecords() {
     try {
         const data = localStorage.getItem(STORAGE_KEY);
@@ -1621,9 +2046,15 @@ function loadRecords() {
     } catch(e) { records = []; }
     let migrated = 0;
     records = records.map(r => {
-        if (r && r.content && !/\n\s*\n/.test(r.content) && r.content.indexOf('，') >= 0) {
-            const nc = reformatLegacyContent(r.content);
-            if (nc && nc !== r.content) { migrated++; return Object.assign({}, r, { content: nc, updatedAt: new Date().toISOString() }); }
+        if (!r || !r.content) return r;
+        let nc = r.content;
+        if (!/\n\s*\n/.test(nc) && nc.indexOf('，') >= 0) {
+            nc = reformatLegacyContent(nc);
+        }
+        nc = compactContentParagraphs(nc);
+        if (nc && nc !== r.content) {
+            migrated++;
+            return Object.assign({}, r, { content: nc, updatedAt: new Date().toISOString() });
         }
         return r;
     });
@@ -1680,9 +2111,20 @@ function loadDraft() {
         });
         if (!hasAny) return false;
 
-        syncSystemCustomVisibility();
-        updateHeaderFurnace();
-        updatePreview();
+        smeltingAutoSuppress = true;
+        try {
+            syncSystemCustomVisibility();
+            syncSideSectionsVisibility();
+            updateHeaderFurnace();
+            updatePreview();
+            lastSmeltingAutoKey = [
+                document.getElementById('furnaceNumber')?.value || '',
+                document.getElementById('recordDate')?.value || '',
+                document.getElementById('shiftType')?.value || ''
+            ].join('|');
+        } finally {
+            smeltingAutoSuppress = false;
+        }
         return true;
     } catch(e) {
         return false;
@@ -1699,6 +2141,9 @@ function showPage(page) {
     if (pageEl) pageEl.classList.add('active');
     const mainEl = document.getElementById('mainContainer');
     if (mainEl) mainEl.classList.toggle('wide', page === 'home');
+    // 首页（数据查看/数据管理）不显示集成冶炼与炉号；仅录入页显示
+    const headerActions = document.getElementById('headerActions');
+    if (headerActions) headerActions.style.display = page === 'entry' ? 'flex' : 'none';
     if (page === 'home') {
         if (currentHomePanel === 'view') renderHomeTable();
         else if (currentHomePanel === 'manage') renderStats();
@@ -1726,13 +2171,22 @@ let homePage = 1;
 let homePageSize = 20;
 let homeSelectedId = null;
 
+function getTodayDateStr() {
+    const d = new Date();
+    const y = d.getFullYear();
+    const m = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    return y + '-' + m + '-' + day;
+}
+
 function goToNewEntry() {
     editingId = null;
     clearForm();
     const dateEl = document.getElementById('recordDate');
-    if (dateEl && !dateEl.value) {
-        dateEl.value = new Date().toISOString().split('T')[0];
-    }
+    if (dateEl) dateEl.value = getTodayDateStr();
+    updateHeaderFurnace();
+    updatePreview();
+    saveDraft();
     showPage('entry');
 }
 
@@ -1822,7 +2276,8 @@ function renderHomeTable() {
     if (total === 0) {
         tbody.innerHTML = `<tr><td colspan="10" style="text-align:center;padding:40px;color:var(--text3);">暂无记录，点击「新增」开始录入</td></tr>`;
         paginationEl.innerHTML = `<span>共 0 条</span>`;
-        if (homeSelectedId) selectHomeRecord(null);
+        homeSelectedId = null;
+        renderHomeDetail(null);
         return;
     }
 
@@ -1874,6 +2329,8 @@ function renderHomeTable() {
         selectHomeRecord(null);
     } else if (homeSelectedId) {
         renderHomeDetail(homeSelectedId);
+    } else {
+        renderHomeDetail(null);
     }
 }
 
@@ -1915,7 +2372,8 @@ function renderHomeDetail(id) {
     if (!id) {
         titleEl.textContent = '记录详情';
         metaEl.style.display = 'none';
-        contentEl.textContent = '请在上方列表中选择一条记录查看详情';
+        metaEl.innerHTML = '';
+        contentEl.textContent = '';
         contentEl.classList.add('empty');
         editBtn.style.display = 'none';
         copyBtn.style.display = 'none';
@@ -1940,7 +2398,7 @@ function renderHomeDetail(id) {
         <div class="home-meta-item"><div class="k">值班长</div><div class="v">${escapeHtml(r.dutyOfficer || '-')}</div></div>
         <div class="home-meta-item"><div class="k">字数</div><div class="v">${r.content.length} 字</div></div>
     `;
-    contentEl.textContent = r.content;
+    contentEl.textContent = compactContentParagraphs(r.content);
     contentEl.classList.remove('empty');
     editBtn.style.display = 'inline-flex';
     copyBtn.style.display = 'inline-flex';
@@ -1969,36 +2427,50 @@ function getSystemField(selectId, customId) {
     return sel.value;
 }
 function buildText() {
-    const blocks = [];
-    const get = id => { const el = document.getElementById(id); return el ? (el.value || '').trim() : ''; };
+    const get = id => {
+        const el = document.getElementById(id);
+        return el ? String(el.value || '').trim() : '';
+    };
     const getSys = id => {
-        const sel = document.getElementById(id); if (!sel) return '';
+        const sel = document.getElementById(id);
+        if (!sel) return '';
         if (sel.value === '__custom__') {
             const c = document.getElementById(id + 'Custom');
-            return c ? (c.value || '').trim() : '';
+            return c ? String(c.value || '').trim() : '';
         }
-        return (sel.value || '').trim();
+        return String(sel.value || '').trim();
     };
     const teamLabel = { first: '甲班', second: '乙班', third: '丙班' }[get('team')] || '';
 
-    const head = [];
+    const paragraphs = [];
+
+    // —— 第1段：值班长、班组 ——
+    const headParts = [];
     const duty = get('dutyOfficer');
-    if (duty) head.push(`值班长：${duty}`);
-    if (teamLabel) head.push(`班组：${teamLabel}`);
-    if (head.length) blocks.push(head.join('  '));
+    if (duty) headParts.push('值班长：' + duty);
+    if (teamLabel) headParts.push('班组：' + teamLabel);
+    if (headParts.length) paragraphs.push(headParts.join('  '));
+
+    // —— 第2段：作业正文（紧凑一段） ——
+    const bodyParts = [];
 
     const ironCount = get('ironCount');
     const southCount = get('southCount');
     const northCount = get('northCount');
     if (ironCount) {
-        let s = `本班出铁${ironCount}炉`;
-        if (southCount) s += `，${southCount}南`;
-        if (northCount) s += `，${northCount}北`;
+        let s = '本班出铁' + ironCount + '炉';
+        if (southCount && southCount !== '0') s += '，' + southCount + '南';
+        if (northCount && northCount !== '0') s += '，' + northCount + '北';
         s += '，';
-        blocks.push(s);
+        bodyParts.push(s);
     }
 
+    function hasSideFurnaceCount(countId) {
+        const v = get(countId);
+        return v !== '' && v !== '0';
+    }
     function buildSide(prefix, label) {
+        if (!hasSideFurnaceCount(prefix + 'Count')) return;
         const tapOp = get(prefix + 'TapOp');
         const depth = get(prefix + 'Depth');
         const fluid = get(prefix + 'Fluidity');
@@ -2009,51 +2481,62 @@ function buildText() {
         const carbon = get(prefix + 'Carbon');
         const slag = get(prefix + 'Slag');
         const segs = [];
-        if (tapOp) segs.push(`${label}铁口${tapOp}开`);
-        if (depth) segs.push(`深度${depth}mm`);
-        if (fluid) segs.push(`炉温（流动性）${fluid}`);
-        if (flow) segs.push(`流量${flow}`);
-        if (block) segs.push(`铁口${block}卡堵`);
-        if (pull) segs.push(`${pull}通拉`);
-        if (oxy) segs.push(`吹氧${oxy}瓶`);
-        if (carbon) segs.push(`排碳${carbon}`);
-        if (slag) segs.push(`渣量${slag}包`);
-        if (segs.length) blocks.push(segs.join('，') + '；');
+        if (tapOp) segs.push(label + '铁口' + tapOp);
+        if (depth) segs.push('深度' + depth + 'mm');
+        if (fluid) segs.push('炉温（流动性）' + fluid);
+        if (flow) segs.push('流量' + flow);
+        if (block) segs.push('铁口' + block + '卡堵');
+        if (pull) segs.push(pull + '通拉');
+        if (oxy) segs.push('吹氧' + oxy + '瓶');
+        if (carbon) segs.push('排碳' + carbon);
+        if (slag) segs.push('渣量' + slag + '包');
+        if (segs.length) bodyParts.push(segs.join('，') + '；');
     }
     buildSide('south', '南面');
     buildSide('north', '北面');
 
+    const statusSegs = [];
     const fStatus = get('furnaceStatus');
     const cStatus = get('currentStatus');
     const pStatus = get('pressureStatus');
     const blowout = get('blowout');
     const collapse = get('collapse');
-    const pA = get('pressA'), pB = get('pressB'), pC = get('pressC');
-    const segs3 = [];
-    if (fStatus) segs3.push(`炉况${fStatus}`);
-    if (cStatus) segs3.push(`电流${cStatus}`);
-    if (pStatus) segs3.push(`炉压${pStatus}`);
-    if (blowout) segs3.push(`${blowout}冲火`);
-    if (collapse) segs3.push(`${collapse}塌料`);
-    if (pA || pB || pC) segs3.push(`三相电极实际压放量：A（${pA}），B（${pB}），C（${pC}）。`);
-    if (segs3.length) blocks.push(segs3.join('，'));
+    if (fStatus) statusSegs.push('炉况' + fStatus);
+    if (cStatus) statusSegs.push('电流' + cStatus);
+    if (pStatus) statusSegs.push('炉压' + pStatus);
+    if (blowout) statusSegs.push(blowout + '冲火');
+    if (collapse) statusSegs.push(collapse + '塌料');
+    if (statusSegs.length) bodyParts.push(statusSegs.join('，') + '。');
 
-    const sysItems = [];
-    sysItems.push('电极位置：' + getSys('electrodePos'));
-    sysItems.push('炉内温度：' + getSys('tempSystem'));
-    sysItems.push('电极压放：' + getSys('electrodePress'));
-    sysItems.push('液压系统：' + getSys('hydraulic'));
-    sysItems.push('水冷系统：' + getSys('waterCool'));
-    sysItems.push('机电设备运转：' + getSys('mechanical'));
-    blocks.push(sysItems.join('  '));
+    // pressA/B/C 仅保存在表单，不写入生成文本预览
+    const sysSegs = [];
+    const ePos = getSys('electrodePos');
+    const temp = getSys('tempSystem');
+    const ePress = getSys('electrodePress');
+    const hydro = getSys('hydraulic');
+    const water = getSys('waterCool');
+    const mech = getSys('mechanical');
+    if (ePos) sysSegs.push('电极位置：' + ePos);
+    if (temp) sysSegs.push('炉内温度：' + temp);
+    if (ePress) sysSegs.push('电极压放：' + ePress);
+    if (hydro) sysSegs.push('液压系统：' + hydro);
+    if (water) sysSegs.push('水冷系统：' + water);
+    if (mech) sysSegs.push('机电设备运转：' + mech);
+    if (sysSegs.length) bodyParts.push(sysSegs.join('  '));
 
-    blocks.push('本班变料情况：' + get('materialChange'));
-    blocks.push('异常情况重点交班：' + get('abnormal'));
+    if (bodyParts.length) paragraphs.push(bodyParts.join(''));
 
+    // —— 第3段：变料 ——
+    paragraphs.push('本班变料情况：' + get('materialChange'));
+
+    // —— 第4段：异常交班 ——
+    paragraphs.push('异常情况重点交班：' + get('abnormal'));
+
+    // —— 第5段：补充说明（有则追加） ——
     const notes = get('additionalNotes');
-    if (notes) blocks.push(notes);
+    if (notes) paragraphs.push(notes);
 
-    return blocks.join('\n\n');
+    return paragraphs.join('\n\n');
 }
 
 function updatePreview() {
@@ -2092,8 +2575,6 @@ const REQUIRED_FIELDS = [
     ['team', '班组', false],
     ['dutyOfficer', '值班长', false],
     ['ironCount', '出铁炉数', false],
-    ['southCount', '南面炉数', false],
-    ['northCount', '北面炉数', false],
     ['southTapOp', '南面铁口', false],
     ['northTapOp', '北面铁口', false],
     ['southDepth', '南面铁口深度(mm)', false],
@@ -2117,20 +2598,61 @@ const REQUIRED_FIELDS = [
     ['pressureStatus', '炉压', false],
     ['blowout', '冲火', false],
     ['collapse', '塌料', false],
-    ['electrodePos', '电极位置', true],
     ['tempSystem', '炉内温度', true],
     ['electrodePress', '电极压放', true],
     ['hydraulic', '液压系统', true],
     ['waterCool', '水冷系统', true],
-    ['mechanical', '机电设备运转', true],
-    ['materialChange', '本班变料情况', false],
-    ['abnormal', '异常情况重点交班', false],
-    ['additionalNotes', '补充说明', false]
+    ['mechanical', '机电设备运转', true]
 ];
 
+const SOUTH_SIDE_FIELD_IDS = [
+    'southTapOp', 'southDepth',
+    'southFluidity', 'southFlow', 'southBlock', 'southPull',
+    'southOxygen', 'southCarbon', 'southSlag'
+];
+const NORTH_SIDE_FIELD_IDS = [
+    'northTapOp', 'northDepth',
+    'northFluidity', 'northFlow', 'northBlock', 'northPull',
+    'northOxygen', 'northCarbon', 'northSlag'
+];
+
+function hasFurnaceSideCount(countId) {
+    const el = document.getElementById(countId);
+    if (!el) return false;
+    const v = (el.value || '').trim();
+    return v !== '' && v !== '0';
+}
+
+function syncSideSectionsVisibility() {
+    const showSouth = hasFurnaceSideCount('southCount');
+    const showNorth = hasFurnaceSideCount('northCount');
+
+    const southSec = document.getElementById('southSideSection');
+    const northSec = document.getElementById('northSideSection');
+    if (southSec) southSec.style.display = showSouth ? '' : 'none';
+    if (northSec) northSec.style.display = showNorth ? '' : 'none';
+
+    // 铁口操作：无对应炉数则隐藏该面字段
+    ['southTapOpWrap', 'southDepthWrap'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.style.display = showSouth ? '' : 'none';
+    });
+    ['northTapOpWrap', 'northDepthWrap'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.style.display = showNorth ? '' : 'none';
+    });
+    const tapTitle = document.getElementById('tapOpSubTitle');
+    if (tapTitle) tapTitle.style.display = (showSouth || showNorth) ? '' : 'none';
+}
+
 function validateRequiredFields() {
+    const skipIds = new Set();
+    if (!hasFurnaceSideCount('southCount')) SOUTH_SIDE_FIELD_IDS.forEach(id => skipIds.add(id));
+    if (!hasFurnaceSideCount('northCount')) NORTH_SIDE_FIELD_IDS.forEach(id => skipIds.add(id));
+
     for (let i = 0; i < REQUIRED_FIELDS.length; i++) {
         const [id, label, isSystem] = REQUIRED_FIELDS[i];
+        if (skipIds.has(id)) continue;
         const el = document.getElementById(id);
         if (!el) continue;
         const val = (el.value || '').trim();
@@ -2203,6 +2725,8 @@ function saveAndNew() {
 }
 
 function clearForm() {
+    smeltingAutoSuppress = true;
+    try {
     document.querySelectorAll('#page-entry input, #page-entry select, #page-entry textarea').forEach(el => {
         if (el.type === 'date') return;
         if (el.tagName === 'SELECT') el.selectedIndex = 0;
@@ -2211,7 +2735,12 @@ function clearForm() {
     document.querySelectorAll('#page-entry input[type="text"][id$="Custom"], #page-entry textarea[id$="Custom"]').forEach(el => el.style.display = 'none');
     editingId = null;
     clearDraft();
+    lastSmeltingAutoKey = '';
+    syncSideSectionsVisibility();
     updatePreview();
+    } finally {
+        smeltingAutoSuppress = false;
+    }
 }
 
 function loadPrevRecord() {
@@ -2265,6 +2794,7 @@ function fillDemo() {
     document.getElementById('materialChange').value = '无';
     document.getElementById('abnormal').value = '无';
     document.getElementById('additionalNotes').value = '无';
+    syncSideSectionsVisibility();
     updatePreview();
     saveDraft();
     showToast('已填入示例数据', 'success');
@@ -2278,13 +2808,16 @@ function copyPreviewText() {
 
 function updateHeaderFurnace() {
     const v = document.getElementById('furnaceNumber').value;
-    document.getElementById('headerFurnace').textContent = '炉号: ' + v;
+    document.getElementById('headerFurnace').textContent = v ? ('炉号: ' + v) : '炉号: -';
 }
 
 // ==================== RECORD ACTIONS ====================
 function copyRecordContent(id) {
     const r = records.find(x => x.id === id);
-    if (r) navigator.clipboard.writeText(r.content).then(() => showToast('已复制', 'success'));
+    if (r) {
+        const text = compactContentParagraphs(r.content);
+        navigator.clipboard.writeText(text).then(() => showToast('已复制', 'success'));
+    }
 }
 
 function editRecord(id) {
@@ -2296,7 +2829,7 @@ function editRecord(id) {
     document.getElementById('editShift').value = r.shift;
     document.getElementById('editTeam').value = r.team || 'first';
     document.getElementById('editDuty').value = r.dutyOfficer || '';  // [新增] 编辑时回填值班长
-    document.getElementById('editContent').value = r.content;
+    document.getElementById('editContent').value = compactContentParagraphs(r.content);
     const _teamMap = { first: '甲班', second: '乙班', third: '丙班' };
     document.getElementById('editModalTitle').textContent = `编辑记录 - ${r.furnaceNumber}炉 ${formatDateDisplay(r.date)} ${r.shift === 'day' ? '白班' : '夜班'}${_teamMap[r.team] ? ' ' + _teamMap[r.team] : ''}`;
     document.getElementById('editModal').classList.add('show');
@@ -2316,7 +2849,7 @@ function saveEditedRecord() {
     records[idx].shift = document.getElementById('editShift').value;
     records[idx].team = document.getElementById('editTeam').value;
     records[idx].dutyOfficer = document.getElementById('editDuty').value.trim();  // [新增] 保存编辑后的值班长
-    records[idx].content = document.getElementById('editContent').value;
+    records[idx].content = compactContentParagraphs(document.getElementById('editContent').value);
     records[idx].updatedAt = new Date().toISOString();
     saveRecords();
     closeEditModal();
@@ -2601,48 +3134,111 @@ function showToast(msg, type) {
 }
 
 // ==================== 集成冶炼数据 ====================
+let smeltingFetchSeq = 0;
+let smeltingAutoSuppress = false;
+let lastSmeltingAutoKey = '';
+
+function mapFormShiftToApi() {
+    const v = document.getElementById('shiftType')?.value;
+    if (v === 'day') return '白班';
+    if (v === 'night') return '夜班';
+    return '';
+}
+
+/** 录入页：炉号+日期+班次选齐后，自动弹出并拉取冶炼数据 */
+function tryAutoOpenSmeltingFromForm() {
+    if (smeltingAutoSuppress) return;
+    const pageEntry = document.getElementById('page-entry');
+    if (!pageEntry || !pageEntry.classList.contains('active')) return;
+
+    const furnace = (document.getElementById('furnaceNumber')?.value || '').trim();
+    const date = (document.getElementById('recordDate')?.value || '').trim();
+    const shift = (document.getElementById('shiftType')?.value || '').trim();
+    if (!furnace || !date || !shift) {
+        lastSmeltingAutoKey = '';
+        return;
+    }
+
+    const key = furnace + '|' + date + '|' + shift;
+    if (key === lastSmeltingAutoKey) return;
+    lastSmeltingAutoKey = key;
+    openSmeltingModal();
+}
+
+function withSmeltingAutoSuppress(fn) {
+    smeltingAutoSuppress = true;
+    try { fn(); } finally { smeltingAutoSuppress = false; }
+}
+
 function openSmeltingModal() {
-    var furnaceEl = document.getElementById('furnaceNumber');
-    if (furnaceEl) document.getElementById('smeltingFurnace').value = furnaceEl.value || '101';
-    var dateEl = document.getElementById('recordDate');
-    if (dateEl) document.getElementById('smeltingDate').value = dateEl.value || new Date().toISOString().split('T')[0];
-    document.getElementById('smeltingShift').value = '';
-    var resultDiv = document.getElementById('smeltingResult');
+    const furnaceEl = document.getElementById('furnaceNumber');
+    const dateEl = document.getElementById('recordDate');
+    const smFurnace = document.getElementById('smeltingFurnace');
+    const smDate = document.getElementById('smeltingDate');
+    const smShift = document.getElementById('smeltingShift');
+
+    smFurnace.value = (furnaceEl && furnaceEl.value) ? furnaceEl.value : '';
+    smDate.value = (dateEl && dateEl.value) ? dateEl.value : getTodayDateStr();
+    smShift.value = mapFormShiftToApi();
+
+    const resultDiv = document.getElementById('smeltingResult');
     resultDiv.style.display = 'none';
     resultDiv.innerHTML = '';
     document.getElementById('smeltingModal').classList.add('show');
+
+    // 若三项已齐，打开即自动获取
+    onSmeltingQueryChanged();
 }
 
 function closeSmeltingModal() {
     document.getElementById('smeltingModal').classList.remove('show');
 }
 
+function onSmeltingQueryChanged() {
+    const furnace = document.getElementById('smeltingFurnace').value;
+    const date = document.getElementById('smeltingDate').value;
+    const shift = document.getElementById('smeltingShift').value;
+    const resultDiv = document.getElementById('smeltingResult');
+
+    if (!furnace || !date || !shift) {
+        resultDiv.style.display = 'none';
+        resultDiv.innerHTML = '';
+        return;
+    }
+    doSmeltingFetch();
+}
+
 async function doSmeltingFetch() {
-    var furnace = document.getElementById('smeltingFurnace').value;
-    var date = document.getElementById('smeltingDate').value;
-    var shift = document.getElementById('smeltingShift').value;
-    var resultDiv = document.getElementById('smeltingResult');
+    const furnace = document.getElementById('smeltingFurnace').value;
+    const date = document.getElementById('smeltingDate').value;
+    const shift = document.getElementById('smeltingShift').value;
+    const resultDiv = document.getElementById('smeltingResult');
 
+    if (!furnace) { showToast('请选择炉号', 'error'); return; }
     if (!date) { showToast('请选择日期', 'error'); return; }
+    if (!shift) { showToast('请选择班次', 'error'); return; }
 
+    const seq = ++smeltingFetchSeq;
     resultDiv.style.display = 'block';
     resultDiv.innerHTML = '<p style="color:var(--text3);">⏳ 正在获取数据...</p>';
 
     try {
-        var fetched = await fetchSmeltingCard(furnace, date, shift || null);
-        var index = fetched.index;
+        const fetched = await fetchSmeltingCard(furnace, date, shift);
+        if (seq !== smeltingFetchSeq) return; // 忽略过期请求
+        const index = fetched.index;
         if (!index.order.length) {
             resultDiv.innerHTML = '<p style="color:var(--text3);">该日期暂无冶炼数据</p>';
             return;
         }
 
-        var html = '<div style="margin-top:8px;">';
+        let html = '<div style="margin-top:8px;">';
         index.order.forEach(function(rid) {
             html += renderSmeltingShiftDetailCard(index.byRid[rid], rid);
         });
         html += '</div>';
         resultDiv.innerHTML = html;
-    } catch(err) {
+    } catch (err) {
+        if (seq !== smeltingFetchSeq) return;
         resultDiv.innerHTML = '<p style="color:var(--red);">❌ 获取失败: ' + escapeHtml(err.message) + '</p>';
     }
 }
@@ -2653,6 +3249,8 @@ function applySmeltingToForm(rid) {
         return;
     }
 
+    smeltingAutoSuppress = true;
+    try {
     var shiftData = smeltingShiftIndex.byRid[rid];
     var main = shiftData.main;
     var tapping = shiftData.tapping || [];
@@ -2700,15 +3298,31 @@ function applySmeltingToForm(rid) {
         if (otherSlag != null) setFormFieldValue('southSlag', otherSlag);
     }
 
+    // 电极压放量 → 表单 pressA/B/C（仅填表，不进入生成文本预览）
+    var electrode = getFormElectrodeValues(shiftData.electrodeLen);
+    if (electrode.A !== '') setFormFieldValue('pressA', electrode.A);
+    if (electrode.B !== '') setFormFieldValue('pressB', electrode.B);
+    if (electrode.C !== '') setFormFieldValue('pressC', electrode.C);
+
     var batchText = apiRowsToText(shiftData.batch);
     if (batchText) setFormFieldValue('materialChange', batchText);
 
+    lastSmeltingAutoKey = [
+        document.getElementById('furnaceNumber').value,
+        document.getElementById('recordDate').value,
+        document.getElementById('shiftType').value
+    ].join('|');
+
     syncSystemCustomVisibility();
+    syncSideSectionsVisibility();
     updatePreview();
     saveDraft();
     showToast('已填充冶炼数据到表单', 'success');
     closeSmeltingModal();
     showPage('entry');
+    } finally {
+        smeltingAutoSuppress = false;
+    }
 }
 
 // ==================== INITIALIZATION ====================
@@ -2722,11 +3336,18 @@ function init() {
 
     // Auto-update preview + persist draft on any form change
     const onFormChange = () => {
+        syncSideSectionsVisibility();
         updatePreview();
         saveDraft();
     };
     document.getElementById('page-entry').addEventListener('input', onFormChange);
     document.getElementById('page-entry').addEventListener('change', onFormChange);
+
+    // 基本信息：炉号/日期/班次选齐后自动打开冶炼数据弹窗
+    ['furnaceNumber', 'recordDate', 'shiftType'].forEach(function(id) {
+        const el = document.getElementById(id);
+        if (el) el.addEventListener('change', tryAutoOpenSmeltingFromForm);
+    });
 
     // Scroll to top button
     window.addEventListener('scroll', () => {
@@ -2738,11 +3359,15 @@ function init() {
         showToast('已恢复未完成的填写内容', 'success');
     } else {
         document.getElementById('recordDate').value = new Date().toISOString().split('T')[0];
+        syncSideSectionsVisibility();
         updatePreview();
     }
 
     renderStats();
     renderHomeTable();
+    // 默认首页：隐藏右上角集成冶炼与炉号
+    const headerActions = document.getElementById('headerActions');
+    if (headerActions) headerActions.style.display = 'none';
 }
 
 init();
@@ -2785,5 +3410,44 @@ init();
 	}
 	// ]]>
 </script>
-</body>
-</html>
+<!-- Code injected by live-server -->
+<script>
+	// <![CDATA[  <-- For SVG support
+	if ('WebSocket' in window) {
+		(function () {
+			function refreshCSS() {
+				var sheets = [].slice.call(document.getElementsByTagName("link"));
+				var head = document.getElementsByTagName("head")[0];
+				for (var i = 0; i < sheets.length; ++i) {
+					var elem = sheets[i];
+					var parent = elem.parentElement || head;
+					parent.removeChild(elem);
+					var rel = elem.rel;
+					if (elem.href && typeof rel != "string" || rel.length == 0 || rel.toLowerCase() == "stylesheet") {
+						var url = elem.href.replace(/(&|\?)_cacheOverride=\d+/, '');
+						elem.href = url + (url.indexOf('?') >= 0 ? '&' : '?') + '_cacheOverride=' + (new Date().valueOf());
+					}
+					parent.appendChild(elem);
+				}
+			}
+			var protocol = window.location.protocol === 'http:' ? 'ws://' : 'wss://';
+			var address = protocol + window.location.host + window.location.pathname + '/ws';
+			var socket = new WebSocket(address);
+			socket.onmessage = function (msg) {
+				if (msg.data == 'reload') window.location.reload();
+				else if (msg.data == 'refreshcss') refreshCSS();
+			};
+			if (sessionStorage && !sessionStorage.getItem('IsThisFirstTime_Log_From_LiveServer')) {
+				console.log('Live reload enabled.');
+				sessionStorage.setItem('IsThisFirstTime_Log_From_LiveServer', true);
+			}
+		})();
+	}
+	else {
+		console.error('Upgrade your browser. This Browser is NOT supported WebSocket for Live-Reloading.');
+	}
+	// ]]>
+</script>
+
+
+</body></html>

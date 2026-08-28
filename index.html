@@ -2,9 +2,6 @@
 
 
 
-
-
-
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
@@ -13,7 +10,7 @@
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
-    <title>交接班记录管理系统 v1.7</title>
+    <title>交接班记录管理系统 v1.8</title>
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
     <style>
         :root {
@@ -99,6 +96,7 @@
         .form-row.cols-4 { grid-template-columns: 1fr 1fr 1fr 1fr; }
         .form-row.cols-5 { grid-template-columns: repeat(5, 1fr); }
         .form-group { display: flex; flex-direction: column; gap: 4px; }
+        .form-group label .req { color: var(--red); margin-left: 2px; font-weight: 700; }
         .form-group label {
             font-size: 12px; color: var(--text2); font-weight: 500; white-space: nowrap;
         }
@@ -322,7 +320,6 @@
             display: flex; flex-wrap: nowrap; gap: 10px; align-items: center;
             margin-bottom: 16px; padding: 14px 16px; background: var(--card);
             border-radius: var(--radius); box-shadow: var(--shadow);
-            border: 2px solid var(--primary);
         }
         .home-toolbar .toolbar-left { display: flex; gap: 8px; flex-wrap: nowrap; align-items: center; }
         .home-toolbar .toolbar-right { margin-left: auto; display: flex; gap: 8px; align-items: center; flex-wrap: nowrap; overflow-x: auto; }
@@ -563,7 +560,7 @@
 <!-- ========== 数据录入（仅通过首页「新增」进入） ========== -->
 <div id="page-entry" class="page">
     <div class="quick-bar">
-        <button class="btn btn-primary btn-sm" onclick="goToHome()">⬅️  返回首页</button>
+        <button class="btn btn-primary btn-sm" onclick="goToHome()">返回首页</button>
         <button class="btn btn-outline btn-sm" onclick="loadPrevRecord()" title="从上一条记录复制部分数据">📋 沿用上一条</button>
         <button class="btn btn-outline btn-sm" onclick="clearForm()">🗑️ 清空表单</button>
         <button class="btn btn-outline btn-sm" onclick="fillDemo()">📌 填入示例</button>
@@ -576,7 +573,7 @@
             <!-- ====== [新增+修改] 基本信息栏从3列改为4列，新增"值班长"输入框 ====== -->
             <div class="form-row cols-5">
                 <div class="form-group">
-                    <label>炉号</label>
+                    <label>炉号<span class="req">*</span></label>
                     <select id="furnaceNumber" onchange="updateHeaderFurnace()">
                         <option value="101">101炉</option>
                         <option value="102">102炉</option>
@@ -585,18 +582,18 @@
                     </select>
                 </div>
                 <div class="form-group">
-                    <label>日期</label>
+                    <label>日期<span class="req">*</span></label>
                     <input type="date" id="recordDate">
                 </div>
                 <div class="form-group">
-                    <label>班次</label>
+                    <label>班次<span class="req">*</span></label>
                     <select id="shiftType">
                         <option value="day">白班</option>
                         <option value="night">夜班</option>
                     </select>
                 </div>
                  <div class="form-group">
-                    <label>班组</label>
+                    <label>班组<span class="req">*</span></label>
                     <select id="team">
                         <option value="first">甲班</option>
                         <option value="second">乙班</option>
@@ -605,7 +602,7 @@
                 </div>
                 <!-- [新增] 值班长手输框 -->
                 <div class="form-group">
-                    <label>值班长</label>
+                    <label>值班长<span class="req">*</span></label>
                     <input type="text" id="dutyOfficer" placeholder="如: 张治顺、陆斌">
                 </div>
             </div>
@@ -618,36 +615,36 @@
         <div class="card-body">
             <div class="form-row cols-3">
                 <div class="form-group">
-                    <label>出铁炉数</label>
+                    <label>出铁炉数<span class="req">*</span></label>
                     <select id="ironCount"><option value="">-</option><option>0</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select>
                 </div>
                 <div class="form-group">
-                    <label>南面炉数</label>
+                    <label>南面炉数<span class="req">*</span></label>
                     <select id="southCount"><option value="">-</option><option>0</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select>
                 </div>
                 <div class="form-group">
-                    <label>北面炉数</label>
+                    <label>北面炉数<span class="req">*</span></label>
                     <select id="northCount"><option value="">-</option><option>0</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select>
                 </div>
             </div>
             <div class="sub-title">铁口操作</div>
             <div class="form-row cols-2">
                 <div class="form-group">
-                    <label>南面铁口</label>
+                    <label>南面铁口<span class="req">*</span></label>
                     <select id="southTapOp"><option value="">-</option><option value="打开">打开</option><option value="烧开">烧开</option><option value="捅开">捅开</option></select>
                 </div>
                 <div class="form-group">
-                    <label>北面铁口</label>
+                    <label>北面铁口<span class="req">*</span></label>
                     <select id="northTapOp"><option value="">-</option><option value="打开">打开</option><option value="烧开">烧开</option><option value="捅开">捅开</option></select>
                 </div>
             </div>
             <div class="form-row cols-2">
                 <div class="form-group">
-                    <label>南面铁口深度 (mm)</label>
+                    <label>南面铁口深度 (mm)<span class="req">*</span></label>
                     <input type="number" id="southDepth" placeholder="如: 1200" min="0" max="1400">
                 </div>
                 <div class="form-group">
-                    <label>北面铁口深度 (mm)</label>
+                    <label>北面铁口深度 (mm)<span class="req">*</span></label>
                     <input type="number" id="northDepth" placeholder="如: 1400" min="0" max="1400">
                 </div>
             </div>
@@ -661,70 +658,70 @@
             <div class="sub-title">南面</div>
             <div class="form-row cols-3">
                 <div class="form-group">
-                    <label>渣铁流动性</label>
+                    <label>渣铁流动性<span class="req">*</span></label>
                     <select id="southFluidity"><option value="">-</option><option>好</option><option>一般</option><option>不好</option></select>
                 </div>
                 <div class="form-group">
-                    <label>流量</label>
+                    <label>流量<span class="req">*</span></label>
                     <select id="southFlow"><option value="">-</option><option>大</option><option>一般</option><option>小</option></select>
                 </div>
                 <div class="form-group">
-                    <label>铁口卡堵</label>
+                    <label>铁口卡堵<span class="req">*</span></label>
                     <select id="southBlock"><option value="">-</option><option>严重</option><option>存在</option><option>无</option></select>
                 </div>
             </div>
             <div class="form-row cols-3">
                 <div class="form-group">
-                    <label>通拉</label>
+                    <label>通拉<span class="req">*</span></label>
                     <select id="southPull"><option value="">-</option><option>频繁</option><option>需要</option><option>不用</option></select>
                 </div>
                 <div class="form-group">
-                    <label>吹氧 (瓶)</label>
+                    <label>吹氧 (瓶)<span class="req">*</span></label>
                     <select id="southOxygen"><option value="">-</option><option>0</option><option>1</option><option>2</option><option>≥3</option></select>
                 </div>
                 <div class="form-group">
-                    <label>排碳</label>
+                    <label>排碳<span class="req">*</span></label>
                     <select id="southCarbon"><option value="">-</option><option>特别多</option><option>多</option><option>合适</option><option>少</option><option>不排碳</option></select>
                 </div>
             </div>
             <div class="form-row cols-2">
                 <div class="form-group">
-                    <label>渣量 (包)</label>
+                    <label>渣量 (包)<span class="req">*</span></label>
                     <input type="number" id="southSlag" min="0" step="0.5" placeholder="请输入包数">
                 </div>
             </div>
             <div class="sub-title">北面</div>
             <div class="form-row cols-3">
                 <div class="form-group">
-                    <label>渣铁流动性</label>
+                    <label>渣铁流动性<span class="req">*</span></label>
                     <select id="northFluidity"><option value="">-</option><option>好</option><option>一般</option><option>不好</option></select>
                 </div>
                 <div class="form-group">
-                    <label>流量</label>
+                    <label>流量<span class="req">*</span></label>
                     <select id="northFlow"><option value="">-</option><option>大</option><option>一般</option><option>小</option></select>
                 </div>
                 <div class="form-group">
-                    <label>铁口卡堵</label>
+                    <label>铁口卡堵<span class="req">*</span></label>
                     <select id="northBlock"><option value="">-</option><option>严重</option><option>存在</option><option>无</option></select>
                 </div>
             </div>
             <div class="form-row cols-3">
                 <div class="form-group">
-                    <label>通拉</label>
+                    <label>通拉<span class="req">*</span></label>
                     <select id="northPull"><option value="">-</option><option>频繁</option><option>需要</option><option>不用</option></select>
                 </div>
                 <div class="form-group">
-                    <label>吹氧 (瓶)</label>
+                    <label>吹氧 (瓶)<span class="req">*</span></label>
                     <select id="northOxygen"><option value="">-</option><option>0</option><option>1</option><option>2</option><option>≥3</option></select>
                 </div>
                 <div class="form-group">
-                    <label>排碳</label>
+                    <label>排碳<span class="req">*</span></label>
                     <select id="northCarbon"><option value="">-</option><option>特别多</option><option>多</option><option>合适</option><option>少</option><option>不排碳</option></select>
                 </div>
             </div>
             <div class="form-row cols-2">
                 <div class="form-group">
-                    <label>渣量 (包)</label>
+                    <label>渣量 (包)<span class="req">*</span></label>
                     <input type="number" id="northSlag" min="0" step="0.5" placeholder="请输入包数">
                 </div>
             </div>
@@ -737,53 +734,38 @@
         <div class="card-body">
             <div class="form-row cols-3">
                 <div class="form-group">
-                    <label>炉况</label>
+                    <label>炉况<span class="req">*</span></label>
                     <select id="furnaceStatus"><option value="">-</option><option>良好</option><option>正常</option><option>欠佳</option><option>较差</option></select>
                 </div>
                 <div class="form-group">
-                    <label>电流</label>
+                    <label>电流<span class="req">*</span></label>
                     <select id="currentStatus"><option value="">-</option><option>稳定</option><option>有波动</option><option>波动大</option></select>
                 </div>
                 <div class="form-group">
-                    <label>炉压</label>
+                    <label>炉压<span class="req">*</span></label>
                     <select id="pressureStatus"><option value="">-</option><option>稳定</option><option>有波动</option><option>波动大</option></select>
                 </div>
             </div>
             <div class="form-row cols-2">
                 <div class="form-group">
-                    <label>冲火</label>
+                    <label>冲火<span class="req">*</span></label>
                     <select id="blowout"><option value="">-</option><option>无</option><option>偶尔</option><option>频繁</option></select>
                 </div>
                 <div class="form-group">
-                    <label>塌料</label>
+                    <label>塌料<span class="req">*</span></label>
                     <select id="collapse"><option value="">-</option><option>无</option><option>偶尔</option><option>频繁</option></select>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Section 4: 电极与系统 -->
+    <!-- Section 4: 系统状态 -->
     <div class="card">
-        <div class="card-header"><span class="section-icon">🔧</span><h3>电极与系统</h3></div>
+        <div class="card-header"><span class="section-icon">🔧</span><h3>系统状态</h3></div>
         <div class="card-body">
-            <div class="sub-title">三相电极压放量</div>
-            <div class="form-row cols-3">
-                <div class="form-group">
-                    <label>A相</label>
-                    <input type="text" id="electrodeA" placeholder="如: 150mm">
-                </div>
-                <div class="form-group">
-                    <label>B相</label>
-                    <input type="text" id="electrodeB" placeholder="如: 120mm">
-                </div>
-                <div class="form-group">
-                    <label>C相</label>
-                    <input type="text" id="electrodeC" placeholder="如: 130mm">
-                </div>
-            </div>
             <div class="form-row cols-2">
                 <div class="form-group">
-                    <label>电极位置</label>
+                    <label>电极位置<span class="req">*</span></label>
                     <select id="electrodePos"><option value="">-</option><option>正常</option><option value="__custom__">自定义</option></select>
                     <input type="text" id="electrodePosCustom" placeholder="请输入..." style="display:none; margin-top:4px;">
                 </div>
@@ -791,29 +773,29 @@
             <div class="sub-title">系统状态</div>
             <div class="form-row cols-2">
                 <div class="form-group">
-                    <label>炉内温度</label>
+                    <label>炉内温度<span class="req">*</span></label>
                     <select id="tempSystem"><option value="">-</option><option>正常</option><option value="__custom__">自定义</option></select>
                     <input type="text" id="tempSystemCustom" placeholder="请输入..." style="display:none; margin-top:4px;">
                 </div>
                 <div class="form-group">
-                    <label>电极压放</label>
+                    <label>电极压放<span class="req">*</span></label>
                     <select id="electrodePress"><option value="">-</option><option>正常</option><option value="__custom__">自定义</option></select>
                     <input type="text" id="electrodePressCustom" placeholder="请输入..." style="display:none; margin-top:4px;">
                 </div>
             </div>
             <div class="form-row cols-3">
                 <div class="form-group">
-                    <label>液压系统</label>
+                    <label>液压系统<span class="req">*</span></label>
                     <select id="hydraulic"><option value="">-</option><option>正常</option><option value="__custom__">自定义</option></select>
                     <input type="text" id="hydraulicCustom" placeholder="请输入..." style="display:none; margin-top:4px;">
                 </div>
                 <div class="form-group">
-                    <label>水冷系统</label>
+                    <label>水冷系统<span class="req">*</span></label>
                     <select id="waterCool"><option value="">-</option><option>正常</option><option value="__custom__">自定义</option></select>
                     <input type="text" id="waterCoolCustom" placeholder="请输入..." style="display:none; margin-top:4px;">
                 </div>
                 <div class="form-group">
-                    <label>机电设备运转</label>
+                    <label>机电设备运转<span class="req">*</span></label>
                     <select id="mechanical"><option value="">-</option><option>正常</option><option value="__custom__">自定义</option></select>
                     <input type="text" id="mechanicalCustom" placeholder="请输入..." style="display:none; margin-top:4px;">
                 </div>
@@ -826,15 +808,15 @@
         <div class="card-header"><span class="section-icon">📝</span><h3>其他</h3></div>
         <div class="card-body">
             <div class="form-group" style="margin-bottom:12px;">
-                <label>本班变料情况</label>
+                <label>本班变料情况<span class="req">*</span></label>
                 <textarea id="materialChange" rows="2" placeholder="如无变料可填"无""></textarea>
             </div>
             <div class="form-group" style="margin-bottom:12px;">
-                <label>异常情况重点交班</label>
+                <label>异常情况重点交班<span class="req">*</span></label>
                 <textarea id="abnormal" rows="2" placeholder="如无异常可填"无""></textarea>
             </div>
             <div class="form-group">
-                <label>补充说明（自由填写，会追加到生成文本末尾）</label>
+                <label>补充说明（自由填写，会追加到生成文本末尾）<span class="req">*</span></label>
                 <textarea id="additionalNotes" rows="3" placeholder="其他需要记录的内容..."></textarea>
             </div>
         </div>
@@ -1985,9 +1967,6 @@ function buildText() {
     const collapse = getVal('collapse');
     if (collapse && collapse !== '无') parts.push(`${collapse}塌料`);
 
-    // 电极
-    const eA = getVal('electrodeA'), eB = getVal('electrodeB'), eC = getVal('electrodeC');
-    if (eA || eB || eC) parts.push(`三相电极压放量：A(${eA || '未填'})，B(${eB || '未填'})，C(${eC || '未填'})`);
     const ePos = getSystemField('electrodePos', 'electrodePosCustom');
     if (ePos) parts.push(`电极位置：${ePos}`);
 
@@ -2042,13 +2021,80 @@ function setupSystemToggle(selectId, customId) {
 }
 
 // ==================== FORM ACTIONS ====================
+// 必填字段清单：[id, 显示名, 是否系统类字段(选择"自定义"时校验自定义输入框)]
+const REQUIRED_FIELDS = [
+    ['furnaceNumber', '炉号', false],
+    ['recordDate', '日期', false],
+    ['shiftType', '班次', false],
+    ['team', '班组', false],
+    ['dutyOfficer', '值班长', false],
+    ['ironCount', '出铁炉数', false],
+    ['southCount', '南面炉数', false],
+    ['northCount', '北面炉数', false],
+    ['southTapOp', '南面铁口', false],
+    ['northTapOp', '北面铁口', false],
+    ['southDepth', '南面铁口深度(mm)', false],
+    ['northDepth', '北面铁口深度(mm)', false],
+    ['southFluidity', '南面渣铁流动性', false],
+    ['southFlow', '南面流量', false],
+    ['southBlock', '南面铁口卡堵', false],
+    ['southPull', '南面通拉', false],
+    ['southOxygen', '南面吹氧(瓶)', false],
+    ['southCarbon', '南面排碳', false],
+    ['southSlag', '南面渣量(包)', false],
+    ['northFluidity', '北面渣铁流动性', false],
+    ['northFlow', '北面流量', false],
+    ['northBlock', '北面铁口卡堵', false],
+    ['northPull', '北面通拉', false],
+    ['northOxygen', '北面吹氧(瓶)', false],
+    ['northCarbon', '北面排碳', false],
+    ['northSlag', '北面渣量(包)', false],
+    ['furnaceStatus', '炉况', false],
+    ['currentStatus', '电流', false],
+    ['pressureStatus', '炉压', false],
+    ['blowout', '冲火', false],
+    ['collapse', '塌料', false],
+    ['electrodePos', '电极位置', true],
+    ['tempSystem', '炉内温度', true],
+    ['electrodePress', '电极压放', true],
+    ['hydraulic', '液压系统', true],
+    ['waterCool', '水冷系统', true],
+    ['mechanical', '机电设备运转', true],
+    ['materialChange', '本班变料情况', false],
+    ['abnormal', '异常情况重点交班', false],
+    ['additionalNotes', '补充说明', false]
+];
+
+function validateRequiredFields() {
+    for (let i = 0; i < REQUIRED_FIELDS.length; i++) {
+        const [id, label, isSystem] = REQUIRED_FIELDS[i];
+        const el = document.getElementById(id);
+        if (!el) continue;
+        const val = (el.value || '').trim();
+        if (val === '' || val === '-') {
+            showToast('请填写「' + label + '」', 'error');
+            try { el.focus(); el.scrollIntoView({behavior:'smooth', block:'center'}); } catch(e) {}
+            return false;
+        }
+        // 系统类字段选择"自定义"时，自定义输入框也必填
+        if (isSystem && val === '__custom__') {
+            const custom = document.getElementById(id + 'Custom');
+            if (!custom || !(custom.value || '').trim()) {
+                showToast('请填写「' + label + '」自定义内容', 'error');
+                try { custom && custom.focus(); custom && custom.scrollIntoView({behavior:'smooth', block:'center'}); } catch(e) {}
+                return false;
+            }
+        }
+    }
+    return true;
+}
+
 function saveRecord() {
+    if (!validateRequiredFields()) return;
     const furnace = getVal('furnaceNumber');
     const date = getVal('recordDate');
     const shift = getVal('shiftType');
     const content = buildText();
-    if (!date) { showToast('请选择日期', 'error'); return; }
-    if (!content) { showToast('请填写至少一项内容', 'error'); return; }
 
     const record = {
         id: editingId || genId(),
@@ -2139,17 +2185,23 @@ function fillDemo() {
     document.getElementById('pressureStatus').value = '稳定';
     document.getElementById('blowout').value = '无';
     document.getElementById('collapse').value = '无';
-    document.getElementById('electrodeA').value = '150mm';
-    document.getElementById('electrodeB').value = '120mm';
-    document.getElementById('electrodeC').value = '130mm';
     document.getElementById('electrodePos').value = '正常';
     document.getElementById('tempSystem').value = '正常';
     document.getElementById('electrodePress').value = '正常';
     document.getElementById('hydraulic').value = '正常';
     document.getElementById('waterCool').value = '正常';
     document.getElementById('mechanical').value = '正常';
+    document.getElementById('southDepth').value = '1200';
+    document.getElementById('northDepth').value = '1400';
+    document.getElementById('southBlock').value = '无';
+    document.getElementById('southPull').value = '不用';
+    document.getElementById('southOxygen').value = '0';
+    document.getElementById('northBlock').value = '无';
+    document.getElementById('northPull').value = '不用';
+    document.getElementById('northOxygen').value = '0';
     document.getElementById('materialChange').value = '无';
     document.getElementById('abnormal').value = '无';
+    document.getElementById('additionalNotes').value = '无';
     updatePreview();
     saveDraft();
     showToast('已填入示例数据', 'success');
@@ -2585,14 +2637,6 @@ function applySmeltingToForm(rid) {
         if (otherSlag != null) setFormFieldValue('southSlag', otherSlag);
     }
 
-    shiftData.electrodeLen.forEach(function(row) {
-        var phase = getElectrodePhase(row.param_name);
-        var val = apiParamValue(row);
-        if (phase === 'A' && val !== '') setFormFieldValue('electrodeA', val);
-        if (phase === 'B' && val !== '') setFormFieldValue('electrodeB', val);
-        if (phase === 'C' && val !== '') setFormFieldValue('electrodeC', val);
-    });
-
     var batchText = apiRowsToText(shiftData.batch);
     if (batchText) setFormFieldValue('materialChange', batchText);
 
@@ -2639,6 +2683,44 @@ function init() {
 }
 
 init();
+</script>
+<!-- Code injected by live-server -->
+<script>
+	// <![CDATA[  <-- For SVG support
+	if ('WebSocket' in window) {
+		(function () {
+			function refreshCSS() {
+				var sheets = [].slice.call(document.getElementsByTagName("link"));
+				var head = document.getElementsByTagName("head")[0];
+				for (var i = 0; i < sheets.length; ++i) {
+					var elem = sheets[i];
+					var parent = elem.parentElement || head;
+					parent.removeChild(elem);
+					var rel = elem.rel;
+					if (elem.href && typeof rel != "string" || rel.length == 0 || rel.toLowerCase() == "stylesheet") {
+						var url = elem.href.replace(/(&|\?)_cacheOverride=\d+/, '');
+						elem.href = url + (url.indexOf('?') >= 0 ? '&' : '?') + '_cacheOverride=' + (new Date().valueOf());
+					}
+					parent.appendChild(elem);
+				}
+			}
+			var protocol = window.location.protocol === 'http:' ? 'ws://' : 'wss://';
+			var address = protocol + window.location.host + window.location.pathname + '/ws';
+			var socket = new WebSocket(address);
+			socket.onmessage = function (msg) {
+				if (msg.data == 'reload') window.location.reload();
+				else if (msg.data == 'refreshcss') refreshCSS();
+			};
+			if (sessionStorage && !sessionStorage.getItem('IsThisFirstTime_Log_From_LiveServer')) {
+				console.log('Live reload enabled.');
+				sessionStorage.setItem('IsThisFirstTime_Log_From_LiveServer', true);
+			}
+		})();
+	}
+	else {
+		console.error('Upgrade your browser. This Browser is NOT supported WebSocket for Live-Reloading.');
+	}
+	// ]]>
 </script>
 </body>
 </html>
